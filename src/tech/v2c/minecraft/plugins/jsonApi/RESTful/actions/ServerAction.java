@@ -2,11 +2,16 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 
 import cn.nukkit.Server;
 
+import cn.nukkit.command.ConsoleCommandSender;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.server.ServerDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ServerAction extends BaseAction {
     @ApiRoute(Path="/api/Server/GetServerInfo")
@@ -29,5 +34,27 @@ public class ServerAction extends BaseAction {
         serverInfo.setPluginCount(server.getPluginManager().getPlugins().size());
 
         return new JsonResult(serverInfo);
+    }
+
+    @ApiRoute(Path="/api/Server/ExecuteCommand")
+    public JsonResult ExecuteCommand(JsonData data){
+        String cmd = data.Data.get("command").toString();
+        // TO-DO: 当前不在主线程执行命令时会抛出错误, 但是还是会正常执行. 等待 NukkitX 修复此问题. 具体可见 cn.nukkit.Server.dispatchCommand 的注释. —— By Tuisku 2019-08-17
+        boolean executeResult = server.dispatchCommand(new ConsoleCommandSender(), cmd);
+
+        return new JsonResult(executeResult);
+    }
+
+    @ApiRoute(Path="/api/Server/ReloadServer")
+    public JsonResult ReloadServer(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                server.reload();
+            }
+        }, 5000);
+
+        return new JsonResult(null, 200, "Server will have reload after 5 seconds.");
     }
 }
