@@ -1,5 +1,6 @@
 package tech.v2c.minecraft.plugins.jsonApi;
 
+import cn.nukkit.command.ConsoleCommandSender;
 import cn.nukkit.plugin.PluginBase;
 
 import org.nanohttpd.util.ServerRunner;
@@ -29,7 +30,12 @@ public class JsonApi extends PluginBase{
         InitPlugin();
         InitActions();
         RouteManage.RegisterRoute();
-        ServerRunner.run(BaseHttpServer.class);
+        (new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ServerRunner.run(BaseHttpServer.class);
+            }
+        })).start();
         getLogger().info("JsonAPI Server run at: " + this.serverPort);
     }
 

@@ -1,5 +1,6 @@
 package tech.v2c.minecraft.plugins.jsonApi.RESTful.global;
 
+import cn.nukkit.command.ConsoleCommandSender;
 import com.google.gson.Gson;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BaseHttpServer extends NanoHTTPD {
+    public static final boolean IS_DEBUG = true;
+
     public BaseHttpServer() throws IOException {
         super(JsonApi.serverPort);
     }
@@ -22,22 +25,25 @@ public class BaseHttpServer extends NanoHTTPD {
     @Override
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
+        if (!IS_DEBUG) {
+            String clientAuthStr = session.getHeaders().get("x-jsonapi-authentication");
+            if (clientAuthStr == null) {
+                return Response.newFixedLengthResponse(Status.UNAUTHORIZED, MIME_PLAINTEXT, "Error:  401 Unauthorized. Need Authentication.");
+            }
 
-        String clientAuthStr = session.getHeaders().get("x-jsonapi-authentication");
-        if(clientAuthStr== null){
-            return Response.newFixedLengthResponse(Status.UNAUTHORIZED, MIME_PLAINTEXT, "Error:  401 Unauthorized. Need Authentication.");
-        }
-
-        String serverAuthStr = GetAuthentication(uri);
-        if(!serverAuthStr.equalsIgnoreCase(clientAuthStr)){
-            return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Authentication failed.");
+            String serverAuthStr = GetAuthentication(uri);
+            if (!serverAuthStr.equalsIgnoreCase(clientAuthStr)) {
+                return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Authentication failed.");
+            }
         }
 
         Map<String, List<String>> parameters = session.getParameters();
         JsonData jsonData = new Gson().fromJson(GetQueryString(parameters, "Data"), JsonData.class);
 
-        if(!CheckTimestamp(jsonData.TimeStamp)){
-            return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Timeout.");
+        if(!IS_DEBUG){
+            if (!CheckTimestamp(jsonData.TimeStamp)) {
+                return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Timeout.");
+            }
         }
 
         if (uri.toLowerCase().contains("upload") || uri.toLowerCase().contains("install")) {
@@ -52,7 +58,7 @@ public class BaseHttpServer extends NanoHTTPD {
             return Response.newFixedLengthResponse(Status.INTERNAL_ERROR, MIME_PLAINTEXT, "");
         }
 
-        if (result == "404"){
+        if (result == "404") {
             return Response.newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Error: " + uri + " is not found.");
         }
 
@@ -95,7 +101,7 @@ public class BaseHttpServer extends NanoHTTPD {
         return EncryptUtils.EncodeBySHA256(base);
     }
 
-    private boolean CheckTimestamp(long ts){
+    private boolean CheckTimestamp(long ts) {
         return (Math.abs((System.currentTimeMillis() - ts)) / (1000 * 60)) <= 2;
     }
 }
