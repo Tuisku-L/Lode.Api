@@ -1,4 +1,4 @@
-package tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities;
+package tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities;
 
 import java.util.Map;
 

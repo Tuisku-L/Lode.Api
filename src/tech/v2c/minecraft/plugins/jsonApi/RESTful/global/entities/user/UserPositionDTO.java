@@ -1,4 +1,4 @@
-package tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.user;
+package tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user;
 
 public class UserPositionDTO {
     private double x;

@@ -1,4 +1,4 @@
-package tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.annotations;
+package tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

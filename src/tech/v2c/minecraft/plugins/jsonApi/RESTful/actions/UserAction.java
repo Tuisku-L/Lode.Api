@@ -4,12 +4,12 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.permission.BanEntry;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.BaseAction;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.annotations.ApiRoute;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.JsonData;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.user.OnlineUserDTO;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.user.UserPositionDTO;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user.OnlineUserDTO;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user.UserPositionDTO;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
 
 import java.util.ArrayList;
 import java.util.Date;

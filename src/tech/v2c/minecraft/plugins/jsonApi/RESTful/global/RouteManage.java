@@ -1,16 +1,14 @@
-package tech.v2c.minecraft.plugins.jsonApi.RESTful.utils;
+package tech.v2c.minecraft.plugins.jsonApi.RESTful.global;
 
 import com.google.gson.Gson;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.actions.UserAction;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.annotations.ApiRoute;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.JsonData;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class RouteManage {
     public static HashMap<String, Method> actionRouteMap = new HashMap();

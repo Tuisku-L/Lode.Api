@@ -1,25 +1,24 @@
 package tech.v2c.minecraft.plugins.jsonApi;
 
-import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
 
 import org.nanohttpd.util.ServerRunner;
 
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.actions.*;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.BaseHttpServer;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.RouteManage;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseHttpServer;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.RouteManage;
 import tech.v2c.minecraft.plugins.jsonApi.tools.YamlUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class JsonApi extends PluginBase{
     public static JsonApi instance;
     public static int serverPort;
+    public static String userName;
+    public static String password;
 
     public JsonApi(){
         JsonApi.instance = this;
@@ -57,8 +56,9 @@ public class JsonApi extends PluginBase{
         }else{
             File configFile = new File(configPath + "/config.yml");
             try {
-                int port = (int)(((HashMap<String, Object>)YamlUtils.GetValue(configFile, "Server")).get("Port"));
-                this.serverPort = port;
+                this.serverPort = (int)(((Map<String, Object>)YamlUtils.GetValue(configFile, "Server")).get("Port"));
+                this.userName = ((Map<String, String>)((Map<String, Object>)YamlUtils.GetValue(configFile, "Server")).get("Authentication")).get("UserName");
+                this.password = ((Map<String, String>)((Map<String, Object>)YamlUtils.GetValue(configFile, "Server")).get("Authentication")).get("Password");
             } catch (IOException e) {
                 e.printStackTrace();
             }

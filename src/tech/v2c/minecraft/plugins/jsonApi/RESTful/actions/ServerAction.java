@@ -3,10 +3,10 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 import cn.nukkit.Server;
 
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.BaseAction;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.annotations.ApiRoute;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.server.ServerDTO;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.server.ServerDTO;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
 
 public class ServerAction extends BaseAction {
     @ApiRoute(Path="/api/Server/GetServerInfo")

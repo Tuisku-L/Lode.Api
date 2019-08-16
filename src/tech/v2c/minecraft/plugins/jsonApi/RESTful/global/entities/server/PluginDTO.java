@@ -1,4 +1,4 @@
-package tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.server;
+package tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.server;
 
 import java.util.List;
 
