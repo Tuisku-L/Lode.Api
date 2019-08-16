@@ -189,7 +189,7 @@ public class HTTPSession implements IHTTPSession {
      * Decodes the Multipart Body data and put it into Key/Value pairs.
      */
     private void decodeMultipartFormData(ContentType contentType, ByteBuffer fbuf, Map<String, List<String>> parms, Map<String, String> files) throws ResponseException {
-        int pcount = 0;
+        // int pcount = 0;
         try {
             int[] boundaryIdxs = getBoundaryPositions(fbuf, contentType.getBoundary().getBytes());
             if (boundaryIdxs.length < 2) {
@@ -229,12 +229,12 @@ public class HTTPSession implements IHTTPSession {
                                 fileName = matcher.group(2);
                                 // add these two line to support multiple
                                 // files uploaded using the same field Id
-                                if (!fileName.isEmpty()) {
-                                    if (pcount > 0)
-                                        partName = partName + String.valueOf(pcount++);
-                                    else
-                                        pcount++;
-                                }
+//                                if (!fileName.isEmpty()) {
+//                                    if (pcount > 0)
+//                                        partName = partName + String.valueOf(pcount++);
+//                                    else
+//                                        pcount++;
+//                                }
                             }
                         }
                     }

@@ -8,6 +8,8 @@ import org.nanohttpd.protocols.http.response.Status;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.JsonData;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,11 @@ public class BaseHttpServer extends NanoHTTPD {
         Map<String, List<String>> parameters = session.getParameters();
         JsonData jsonData = new Gson().fromJson(GetQueryString(parameters, "Data"), JsonData.class);
         String uri = session.getUri();
+
+        if(uri.toLowerCase().contains("upload") || uri.toLowerCase().contains("install")){
+            Map<String, File> allFile = UploadFiles(session);
+            jsonData.Data.put("files", allFile);
+        }
 
         String result = "";
         try{
@@ -39,5 +46,29 @@ public class BaseHttpServer extends NanoHTTPD {
             return parameters.get(key).get(0);
         }
         return null;
+    }
+
+    private  Map<String, File> UploadFiles(IHTTPSession session){
+        Map<String, String> files = new HashMap<>();
+        try {
+            session.parseBody(files);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ResponseException e) {
+            e.printStackTrace();
+        }
+
+        Map<String, File> allFile = new HashMap<String, File>();
+
+        for (String key : session.getParameters().keySet()) {
+            if(key.equalsIgnoreCase("data")) continue;
+            final String tmpFilePath = files.get(key);
+            final String fileName = key;
+            final File tmpFile = new File(tmpFilePath);
+
+            allFile.put(fileName, tmpFile);
+        }
+
+        return allFile;
     }
 }

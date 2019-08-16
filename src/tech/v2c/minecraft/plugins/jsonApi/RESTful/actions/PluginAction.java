@@ -10,9 +10,13 @@ import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.JsonData;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.server.PluginDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.results.JsonResult;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+
+import static cn.nukkit.utils.Utils.copyFile;
 
 public class PluginAction extends BaseAction {
     public PluginAction(){
@@ -55,7 +59,7 @@ public class PluginAction extends BaseAction {
         }
 
         pluginManager.disablePlugin(plugin);
-        return new JsonResult();
+        return GetPluginList();
     }
 
     // 开启指定插件
@@ -64,7 +68,7 @@ public class PluginAction extends BaseAction {
         Plugin plugin = pluginManager.getPlugin(data.Data.get("name").toString());
         pluginManager.enablePlugin(plugin);
 
-        return new JsonResult();
+        return GetPluginList();
     }
 
     // 关闭所有插件
@@ -72,11 +76,29 @@ public class PluginAction extends BaseAction {
     public JsonResult DisableAllPlugins(){
         pluginManager.disablePlugins();
 
-        return new JsonResult();
+        return GetPluginList();
     }
 
+    // 安装插件
     @ApiRoute(Path="/api/Plugin/Install")
-    public JsonResult InstallPlugin(){
-        return null;
+    public JsonResult InstallPlugin(JsonData data){
+        Map<String, File> allFile = ( Map<String, File>)data.Data.get("files");
+        String pluginPath = server.getPluginPath();
+
+        for (Map.Entry<String, File> plg : allFile.entrySet()) {
+            final String fileName = plg.getKey();
+            final File file = plg.getValue();
+            final String copyPath = pluginPath + fileName;
+            try {
+                copyFile(file, new File(copyPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Plugin uploadPlg = pluginManager.loadPlugin(copyPath);
+            pluginManager.enablePlugin(uploadPlg);
+        }
+
+        return GetPluginList();
     }
 }
