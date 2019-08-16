@@ -39,6 +39,12 @@ public class JsonApi extends PluginBase{
         getLogger().info("JsonAPI Server run at: " + this.serverPort);
     }
 
+    @Override
+    public void onDisable(){
+        BaseHttpServer.instance.stop();
+        getLogger().info("JsonAPI Server is shutdown.");
+    }
+
     private void InitActions(){
         RouteManage.allAction.add(UserAction.class);
         RouteManage.allAction.add(ServerAction.class);

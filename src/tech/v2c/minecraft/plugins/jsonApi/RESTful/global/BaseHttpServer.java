@@ -17,9 +17,11 @@ import java.util.Map;
 
 public class BaseHttpServer extends NanoHTTPD {
     public static final boolean IS_DEBUG = true;
+    public static BaseHttpServer instance;
 
     public BaseHttpServer() throws IOException {
         super(JsonApi.serverPort);
+        BaseHttpServer.instance = this;
     }
 
     @Override
