@@ -5,6 +5,7 @@ import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
+import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.utils.entities.JsonData;
 
 import java.io.*;
@@ -15,8 +16,7 @@ import java.util.Map;
 
 public class BaseHttpServer extends NanoHTTPD {
     public BaseHttpServer() throws IOException {
-        super(30000);
-        // start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
+        super(JsonApi.serverPort);
     }
 
     @Override
