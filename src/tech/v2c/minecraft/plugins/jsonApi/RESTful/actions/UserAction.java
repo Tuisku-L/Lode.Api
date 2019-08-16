@@ -17,12 +17,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UserAction extends BaseAction {
-    public UserAction(){
-        this.server = JsonApi.instance.getServer();
-    }
-
-    private Server server;
-
     @ApiRoute(Path="/api/User/GetUserByName")
     public JsonResult GetUserByName(JsonData data){
         String searchName = data.Data.get("Name").toString();
@@ -148,7 +142,7 @@ public class UserAction extends BaseAction {
     public JsonResult RemoveOp(JsonData data){
         String userName = data.Data.get("name").toString();
         server.removeOp(userName);
-        
+
         return GetOpList();
     }
 }

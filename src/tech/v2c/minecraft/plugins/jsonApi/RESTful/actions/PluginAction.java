@@ -19,13 +19,11 @@ import java.util.Map;
 import static cn.nukkit.utils.Utils.copyFile;
 
 public class PluginAction extends BaseAction {
+    private final PluginManager pluginManager;
+
     public PluginAction(){
-        this.server = JsonApi.instance.getServer();
         pluginManager = server.getPluginManager();
     }
-
-    private Server server;
-    private PluginManager pluginManager;
 
     // 获取插件列表
     @ApiRoute(Path="/api/Plugin/GetList")
