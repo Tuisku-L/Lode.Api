@@ -13,6 +13,15 @@ public class ServerDTO {
     private int gameMode;
     private int difficulty;
     private int pluginCount;
+    private boolean isAutoSave;
+
+    public boolean isAutoSave() {
+        return isAutoSave;
+    }
+
+    public void setAutoSave(boolean autoSave) {
+        isAutoSave = autoSave;
+    }
 
     public int getPluginCount() {
         return pluginCount;

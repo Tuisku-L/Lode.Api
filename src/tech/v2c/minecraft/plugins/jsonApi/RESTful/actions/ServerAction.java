@@ -33,6 +33,7 @@ public class ServerAction extends BaseAction {
         serverInfo.setGameMode(server.getGamemode());
         serverInfo.setDifficulty(server.getDifficulty());
         serverInfo.setPluginCount(server.getPluginManager().getPlugins().size());
+        serverInfo.setAutoSave(server.getAutoSave());
 
         return new JsonResult(serverInfo);
     }
@@ -64,6 +65,14 @@ public class ServerAction extends BaseAction {
         int maxPlayer = (int) Double.parseDouble(data.Data.get("maxPlayer").toString());
         server.setMaxPlayers(maxPlayer);
 
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path="/api/Server/SetAutoSave")
+    public JsonResult SetAutoSave(JsonData data){
+        boolean isAutoSave = (boolean)data.Data.get("isAutoSave");
+        server.setAutoSave(isAutoSave);
+        
         return new JsonResult();
     }
 }
