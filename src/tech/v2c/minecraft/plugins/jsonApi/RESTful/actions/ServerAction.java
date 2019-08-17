@@ -72,7 +72,14 @@ public class ServerAction extends BaseAction {
     public JsonResult SetAutoSave(JsonData data){
         boolean isAutoSave = (boolean)data.Data.get("isAutoSave");
         server.setAutoSave(isAutoSave);
-        
+
         return new JsonResult();
+    }
+
+    @ApiRoute(Path="/api/Server/SendBroadcastMessage")
+    public JsonResult SendBroadcastMessage(JsonData data){
+        String message = data.Data.get("message").toString();
+
+        return new JsonResult(server.broadcastMessage(message));
     }
 }
