@@ -21,7 +21,7 @@ public class UserAction extends BaseAction {
     @ApiRoute(Path = "/api/User/GetUserByName")
     public JsonResult GetUserByName(JsonData data) {
         String searchName = data.Data.get("name").toString();
-        Player player = UserUtils.GetPlayerByName(server, searchName);
+        Player player = UserUtils.GetPlayerByName(searchName);
         return new JsonResult(player);
     }
 
@@ -148,9 +148,77 @@ public class UserAction extends BaseAction {
     public JsonResult SetGameMode(JsonData data) {
         String userName = data.Data.get("name").toString();
         int gameMode = (int) Double.parseDouble(data.Data.get("gameMode").toString());
-        Player user = UserUtils.GetPlayerByName(server, userName);
+        Player user = UserUtils.GetPlayerByName(userName);
         if(user == null) return new JsonResult(null, 404, "Error: user not found.");
 
         return new JsonResult(user.setGamemode(gameMode));
+    }
+
+    @ApiRoute(Path = "/api/User/SendChat")
+    public JsonResult SendChat(JsonData data){
+        String userName = data.Data.get("name").toString();
+        String message = data.Data.get("message").toString();
+        Object source = data.Data.get("source");
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.sendChat(source == null ? "" : source.toString(), message);
+        
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/SendMessage")
+    public JsonResult SendMessage(JsonData data){
+        String userName = data.Data.get("name").toString();
+        String message = data.Data.get("message").toString();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.sendMessage(message);
+
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/SendExperience")
+    public JsonResult SendExperience(JsonData data){
+        String userName = data.Data.get("name").toString();
+        int expType = (int)Double.parseDouble(data.Data.get("type").toString());
+        int value = (int)Double.parseDouble(data.Data.get("value").toString());
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        if(expType == 0){
+            player.sendExperience(value);
+        }else{
+            player.sendExperienceLevel(value);
+        }
+
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/SetPlayerFire")
+    public JsonResult SetPlayerFire(JsonData data){
+        String userName = data.Data.get("name").toString();
+        int time = (int)Double.parseDouble(data.Data.get("time").toString());
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.setOnFire(time);
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/KillPlayer")
+    public JsonResult KillPlayer(JsonData data){
+        String userName = data.Data.get("name").toString();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.kill();
+        return new JsonResult();
     }
 }
