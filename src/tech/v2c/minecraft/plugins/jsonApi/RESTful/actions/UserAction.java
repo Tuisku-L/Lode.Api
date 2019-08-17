@@ -10,6 +10,7 @@ import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user.OnlineUserDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user.UserPositionDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.tools.gameUtils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,18 +18,15 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UserAction extends BaseAction {
-    @ApiRoute(Path="/api/User/GetUserByName")
-    public JsonResult GetUserByName(JsonData data){
-        String searchName = data.Data.get("Name").toString();
-        Server server = JsonApi.instance.getServer();
-        Map<UUID, Player> onlinePlayers = server.getOnlinePlayers();
-        server.reload();
-        // Player player = new OfflinePlayer(server, searchName).getPlayer();
-        return new JsonResult(onlinePlayers);
+    @ApiRoute(Path = "/api/User/GetUserByName")
+    public JsonResult GetUserByName(JsonData data) {
+        String searchName = data.Data.get("name").toString();
+        Player player = UserUtils.GetPlayerByName(server, searchName);
+        return new JsonResult(player);
     }
 
-    @ApiRoute(Path="/api/User/GetOnlineList")
-    public JsonResult GetOnlineUserList(){
+    @ApiRoute(Path = "/api/User/GetOnlineList")
+    public JsonResult GetOnlineUserList() {
         Map<UUID, Player> users = server.getOnlinePlayers();
         ArrayList<OnlineUserDTO> userList = new ArrayList<OnlineUserDTO>();
 
@@ -56,8 +54,8 @@ public class UserAction extends BaseAction {
         return new JsonResult(userList);
     }
 
-    @ApiRoute(Path="/api/User/BanByName")
-    public JsonResult BanUserByName(JsonData data){
+    @ApiRoute(Path = "/api/User/BanByName")
+    public JsonResult BanUserByName(JsonData data) {
         String userName = data.Data.get("name").toString();
         Object reason = data.Data.get("reason");
         Object startTime = data.Data.get("creationDate");
@@ -66,7 +64,7 @@ public class UserAction extends BaseAction {
         BanEntry be = new BanEntry(userName);
         be.setReason(reason == null ? "" : reason.toString());
         be.setCreationDate(startTime != null ? new Date(Long.parseLong(startTime.toString())) : new Date());
-        if(endTime != null){
+        if (endTime != null) {
             be.setExpirationDate(new Date(Long.parseLong(endTime.toString())));
         }
 
@@ -75,8 +73,8 @@ public class UserAction extends BaseAction {
         return new JsonResult(be);
     }
 
-    @ApiRoute(Path="/api/User/BanByIp")
-    public JsonResult BanUserByIp(JsonData data){
+    @ApiRoute(Path = "/api/User/BanByIp")
+    public JsonResult BanUserByIp(JsonData data) {
         String userIp = data.Data.get("ip").toString();
         Object reason = data.Data.get("reason");
         Object endTime = data.Data.get("expirationDate");
@@ -85,7 +83,7 @@ public class UserAction extends BaseAction {
         BanEntry be = new BanEntry(userIp);
         be.setReason(reason == null ? "" : reason.toString());
         be.setCreationDate(startTime != null ? new Date(Long.parseLong(startTime.toString())) : new Date());
-        if(endTime != null){
+        if (endTime != null) {
             be.setExpirationDate(new Date(Long.parseLong(endTime.toString())));
         }
 
@@ -94,55 +92,65 @@ public class UserAction extends BaseAction {
         return new JsonResult(be);
     }
 
-    @ApiRoute(Path="/api/User/GetNameBanList")
-    public JsonResult GetNameBanList(){
+    @ApiRoute(Path = "/api/User/GetNameBanList")
+    public JsonResult GetNameBanList() {
         return new JsonResult(server.getNameBans().getEntires().values());
     }
 
-    @ApiRoute(Path="/api/User/GetIpBanList")
-    public JsonResult GetIpBanList(){
+    @ApiRoute(Path = "/api/User/GetIpBanList")
+    public JsonResult GetIpBanList() {
         return new JsonResult(server.getIPBans().getEntires().values());
     }
 
-    @ApiRoute(Path="/api/User/GetWhiteList")
-    public JsonResult GetWhiteList(){
+    @ApiRoute(Path = "/api/User/GetWhiteList")
+    public JsonResult GetWhiteList() {
         return new JsonResult(server.getWhitelist().getAll().keySet());
     }
 
-    @ApiRoute(Path="/api/User/AddWhiteList")
-    public JsonResult AddWhiteList(JsonData data){
+    @ApiRoute(Path = "/api/User/AddWhiteList")
+    public JsonResult AddWhiteList(JsonData data) {
         String userName = data.Data.get("name").toString();
         server.addWhitelist(userName);
 
         return GetWhiteList();
     }
 
-    @ApiRoute(Path="/api/User/RemoveWhiteList")
-    public JsonResult RemoveWhiteList(JsonData data){
+    @ApiRoute(Path = "/api/User/RemoveWhiteList")
+    public JsonResult RemoveWhiteList(JsonData data) {
         String userName = data.Data.get("name").toString();
         server.removeWhitelist(userName);
 
         return GetWhiteList();
     }
 
-    @ApiRoute(Path="/api/User/GetOPList")
-    public JsonResult GetOpList(){
+    @ApiRoute(Path = "/api/User/GetOPList")
+    public JsonResult GetOpList() {
         return new JsonResult(server.getOps().getAll().keySet());
     }
 
-    @ApiRoute(Path="/api/User/AddOp")
-    public JsonResult AddOp(JsonData data){
+    @ApiRoute(Path = "/api/User/AddOp")
+    public JsonResult AddOp(JsonData data) {
         String userName = data.Data.get("name").toString();
         server.addOp(userName);
 
         return GetOpList();
     }
 
-    @ApiRoute(Path="/api/User/RemoveOp")
-    public JsonResult RemoveOp(JsonData data){
+    @ApiRoute(Path = "/api/User/RemoveOp")
+    public JsonResult RemoveOp(JsonData data) {
         String userName = data.Data.get("name").toString();
         server.removeOp(userName);
 
         return GetOpList();
+    }
+
+    @ApiRoute(Path = "/api/User/SetGameMode")
+    public JsonResult SetGameMode(JsonData data) {
+        String userName = data.Data.get("name").toString();
+        int gameMode = (int) Double.parseDouble(data.Data.get("gameMode").toString());
+        Player user = UserUtils.GetPlayerByName(server, userName);
+        if(user == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        return new JsonResult(user.setGamemode(gameMode));
     }
 }
