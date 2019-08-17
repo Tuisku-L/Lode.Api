@@ -10,6 +10,7 @@ import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.server.ServerDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
 
+import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,5 +57,13 @@ public class ServerAction extends BaseAction {
         }, 5000);
 
         return new JsonResult(null, 200, "Server will have reload after 5 seconds.");
+    }
+
+    @ApiRoute(Path="/api/Server/SetMaxPlayer")
+    public JsonResult SetMaxPlayer(JsonData data){
+        int maxPlayer = (int) Double.parseDouble(data.Data.get("maxPlayer").toString());
+        server.setMaxPlayers(maxPlayer);
+
+        return new JsonResult();
     }
 }
