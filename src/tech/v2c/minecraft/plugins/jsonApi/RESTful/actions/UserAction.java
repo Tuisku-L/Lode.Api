@@ -3,13 +3,16 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.event.player.PlayerKickEvent;
+import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.permission.BanEntry;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.item.ItemDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user.OnlineUserDTO;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user.PlayerInventoryDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.user.UserPositionDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
 import tech.v2c.minecraft.plugins.jsonApi.tools.gameUtils.UserUtils;
@@ -291,5 +294,49 @@ public class UserAction extends BaseAction {
         }
 
         return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/GetPlayerInventory")
+    public JsonResult GetPlayerInventory(JsonData data){
+        String userName = data.Data.get("name").toString();
+        ArrayList<PlayerInventoryDTO> list = new ArrayList<PlayerInventoryDTO>();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        PlayerInventory playerInventory = player.getInventory();
+        for (int i = 0; i < playerInventory.getSize(); i++) {
+            Item item = playerInventory.getItem(i);
+            if(item.getId() != Item.AIR){
+                PlayerInventoryDTO playerInventoryDTO = new PlayerInventoryDTO();
+                playerInventoryDTO.setIndex(i);
+                playerInventoryDTO.setId(item.getId());
+                playerInventoryDTO.setName(item.getName());
+                playerInventoryDTO.setCount(item.count);
+
+                list.add(playerInventoryDTO);
+            }
+        }
+
+        return new JsonResult(list);
+    }
+
+    @ApiRoute(Path = "/api/User/GetInHandItem")
+    public JsonResult GetInHandItem(JsonData data){
+        String userName = data.Data.get("name").toString();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        PlayerInventory playerInventory = player.getInventory();
+
+        Item item = playerInventory.getItemInHand();
+        PlayerInventoryDTO playerInventoryDTO = new PlayerInventoryDTO();
+        playerInventoryDTO.setIndex(playerInventory.getHeldItemIndex());
+        playerInventoryDTO.setId(item.getId());
+        playerInventoryDTO.setName(item.getName());
+        playerInventoryDTO.setCount(item.count);
+
+        return new JsonResult(playerInventoryDTO);
     }
 }
