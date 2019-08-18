@@ -5,6 +5,8 @@ import cn.nukkit.Server;
 import cn.nukkit.event.player.PlayerKickEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Position;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.permission.BanEntry;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
@@ -223,7 +225,7 @@ public class UserAction extends BaseAction {
             player.sendExperienceLevel(value);
         }
 
-        if(msg != null){
+        if (msg != null) {
             player.sendMessage(msg.toString());
         }
 
@@ -241,7 +243,7 @@ public class UserAction extends BaseAction {
 
         player.setOnFire(time);
 
-        if(msg != null){
+        if (msg != null) {
             player.sendMessage(msg.toString());
         }
 
@@ -258,7 +260,7 @@ public class UserAction extends BaseAction {
 
         player.kill();
 
-        if(msg != null){
+        if (msg != null) {
             player.sendMessage(msg.toString());
         }
 
@@ -280,7 +282,7 @@ public class UserAction extends BaseAction {
     }
 
     @ApiRoute(Path = "/api/User/ClearPlayerInventory")
-    public JsonResult ClearPlayerInventory(JsonData data){
+    public JsonResult ClearPlayerInventory(JsonData data) {
         String userName = data.Data.get("name").toString();
         Object msg = data.Data.get("message");
 
@@ -289,7 +291,7 @@ public class UserAction extends BaseAction {
 
         player.getInventory().clearAll();
 
-        if(msg != null){
+        if (msg != null) {
             player.sendMessage(msg.toString());
         }
 
@@ -297,7 +299,7 @@ public class UserAction extends BaseAction {
     }
 
     @ApiRoute(Path = "/api/User/GetPlayerInventory")
-    public JsonResult GetPlayerInventory(JsonData data){
+    public JsonResult GetPlayerInventory(JsonData data) {
         String userName = data.Data.get("name").toString();
         ArrayList<PlayerInventoryDTO> list = new ArrayList<PlayerInventoryDTO>();
 
@@ -307,7 +309,7 @@ public class UserAction extends BaseAction {
         PlayerInventory playerInventory = player.getInventory();
         for (int i = 0; i < playerInventory.getSize(); i++) {
             Item item = playerInventory.getItem(i);
-            if(item.getId() != Item.AIR){
+            if (item.getId() != Item.AIR) {
                 PlayerInventoryDTO playerInventoryDTO = new PlayerInventoryDTO();
                 playerInventoryDTO.setIndex(i);
                 playerInventoryDTO.setId(item.getId());
@@ -322,7 +324,7 @@ public class UserAction extends BaseAction {
     }
 
     @ApiRoute(Path = "/api/User/GetInHandItem")
-    public JsonResult GetInHandItem(JsonData data){
+    public JsonResult GetInHandItem(JsonData data) {
         String userName = data.Data.get("name").toString();
 
         Player player = UserUtils.GetPlayerByName(userName);
@@ -338,5 +340,52 @@ public class UserAction extends BaseAction {
         playerInventoryDTO.setCount(item.count);
 
         return new JsonResult(playerInventoryDTO);
+    }
+
+    @ApiRoute(Path = "/api/User/GetPlayerPosition")
+    public JsonResult GetPlayerPosition(JsonData data){
+        String userName = data.Data.get("name").toString();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        Position position = player.getPosition();
+
+        UserPositionDTO userPositionDTO = new UserPositionDTO();
+        userPositionDTO.setX(position.getX());
+        userPositionDTO.setY(position.getY());
+        userPositionDTO.setZ(position.getZ());
+
+        return new JsonResult(userPositionDTO);
+    }
+
+    @ApiRoute(Path = "/api/User/SetPlayerPosition")
+    public JsonResult SetPlayerPosition(JsonData data) {
+        String userName = data.Data.get("name").toString();
+        double x = Double.parseDouble(data.Data.get("x").toString());
+        double y = Double.parseDouble(data.Data.get("y").toString());
+        double z = Double.parseDouble(data.Data.get("z").toString());
+        Object yaw = data.Data.get("yaw");
+        Object pitch = data.Data.get("pitch");
+        Object msg = data.Data.get("message");
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        boolean result = false;
+
+        if (yaw != null && pitch != null) {
+            result = player.setPositionAndRotation(new Vector3(x, y, z), Double.parseDouble(yaw.toString()), Double.parseDouble(pitch.toString()));
+        } else {
+            result = player.setPosition(new Vector3(x, y, z));
+        }
+
+        if (msg != null) {
+            if (result) {
+                player.sendMessage(msg.toString());
+            }
+        }
+
+        return new JsonResult(result);
     }
 }
