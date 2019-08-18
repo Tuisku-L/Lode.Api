@@ -48,10 +48,31 @@ public class PluginAction extends BaseAction {
         return new JsonResult(pluginList);
     }
 
+    @ApiRoute(Path="/api/Plugin/GetPluginInfo")
+    public JsonResult GetPluginInfo(JsonData data){
+        Plugin plugin = pluginManager.getPlugin(data.Data.get("name").toString());
+
+        if(plugin == null) return new JsonResult(null, 404, "Error: plugin not found.");
+
+        PluginDTO plg = new PluginDTO();
+        plg.setName(plugin.getName());
+        plg.setVersion(plugin.getDescription().getVersion());
+        plg.setWebsite(plugin.getDescription().getWebsite());
+        plg.setEnabled(plugin.isEnabled());
+        plg.setDisabled(plugin.isDisabled());
+        plg.setAuthors(plugin.getDescription().getAuthors());
+        plg.setDescription(plugin.getDescription().getDescription());
+        
+        return new JsonResult(plg);
+    }
+
     // 关闭指定插件
     @ApiRoute(Path="/api/Plugin/Disable")
     public JsonResult DisablePluginByName(JsonData data){
         Plugin plugin = pluginManager.getPlugin(data.Data.get("name").toString());
+
+        if(plugin == null) return new JsonResult(null, 404, "Error: plugin not found.");
+
         if(!pluginManager.isPluginEnabled(plugin)){
             return new JsonResult(null, 401, "Plugin is disable alright.");
         }
@@ -64,6 +85,9 @@ public class PluginAction extends BaseAction {
     @ApiRoute(Path="/api/Plugin/Enable")
     public JsonResult EnablePluginByName(JsonData data){
         Plugin plugin = pluginManager.getPlugin(data.Data.get("name").toString());
+
+        if(plugin == null) return new JsonResult(null, 404, "Error: plugin not found.");
+
         pluginManager.enablePlugin(plugin);
 
         return GetPluginList();
