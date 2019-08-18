@@ -3,6 +3,7 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.event.player.PlayerKickEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.permission.BanEntry;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
@@ -233,6 +234,18 @@ public class UserAction extends BaseAction {
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.kick(reason == null ? PlayerKickEvent.Reason.UNKNOWN.toString() : reason.toString(), isKickByAdmin);
+
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/ClearPlayerInventory")
+    public JsonResult ClearPlayerInventory(JsonData data){
+        String userName = data.Data.get("name").toString();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.getInventory().clearAll();
 
         return new JsonResult();
     }
