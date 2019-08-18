@@ -54,6 +54,7 @@ public class ItemAction extends BaseAction {
         int itemId = (int) Double.parseDouble(data.Data.get("item").toString());
         Object count = data.Data.get("count");
         Object meta = data.Data.get("meta");
+        Object msg = data.Data.get("message");
 
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
@@ -66,7 +67,15 @@ public class ItemAction extends BaseAction {
             if(item.getName().toLowerCase().contains("unknown")){
                 return new JsonResult(null, 404, "Error: item not found.");
             }
-            return new JsonResult(player.getInventory().setItem(firstEmpty, item));
+            boolean result = player.getInventory().setItem(firstEmpty, item);
+            if(player.getInventory().setItem(firstEmpty, item)){
+                if(msg != null){
+                    player.sendMessage(msg.toString());
+                }
+                return new JsonResult(result);
+            }else{
+                return new JsonResult(null, 400, "Error: can not send item to player.");
+            }
         }
     }
 }

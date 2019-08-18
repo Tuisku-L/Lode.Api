@@ -188,6 +188,7 @@ public class UserAction extends BaseAction {
         String userName = data.Data.get("name").toString();
         int expType = (int) Double.parseDouble(data.Data.get("type").toString());
         int value = (int) Double.parseDouble(data.Data.get("value").toString());
+        Object msg = data.Data.get("message");
 
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
@@ -198,6 +199,10 @@ public class UserAction extends BaseAction {
             player.sendExperienceLevel(value);
         }
 
+        if(msg != null){
+            player.sendMessage(msg.toString());
+        }
+
         return new JsonResult();
     }
 
@@ -205,22 +210,34 @@ public class UserAction extends BaseAction {
     public JsonResult SetPlayerFire(JsonData data) {
         String userName = data.Data.get("name").toString();
         int time = (int) Double.parseDouble(data.Data.get("time").toString());
+        Object msg = data.Data.get("message");
 
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.setOnFire(time);
+
+        if(msg != null){
+            player.sendMessage(msg.toString());
+        }
+
         return new JsonResult();
     }
 
     @ApiRoute(Path = "/api/User/KillPlayer")
     public JsonResult KillPlayer(JsonData data) {
         String userName = data.Data.get("name").toString();
+        Object msg = data.Data.get("message");
 
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.kill();
+
+        if(msg != null){
+            player.sendMessage(msg.toString());
+        }
+
         return new JsonResult();
     }
 
@@ -241,11 +258,16 @@ public class UserAction extends BaseAction {
     @ApiRoute(Path = "/api/User/ClearPlayerInventory")
     public JsonResult ClearPlayerInventory(JsonData data){
         String userName = data.Data.get("name").toString();
+        Object msg = data.Data.get("message");
 
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.getInventory().clearAll();
+
+        if(msg != null){
+            player.sendMessage(msg.toString());
+        }
 
         return new JsonResult();
     }
