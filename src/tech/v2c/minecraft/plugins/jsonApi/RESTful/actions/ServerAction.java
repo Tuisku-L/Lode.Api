@@ -3,6 +3,7 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 import cn.nukkit.Server;
 
 import cn.nukkit.command.ConsoleCommandSender;
+import cn.nukkit.utils.Config;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
@@ -10,7 +11,6 @@ import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.server.ServerDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
 
-import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,5 +81,16 @@ public class ServerAction extends BaseAction {
         String message = data.Data.get("message").toString();
 
         return new JsonResult(server.broadcastMessage(message));
+    }
+
+    @ApiRoute(Path="/api/Server/SetServerProps")
+    public JsonResult SetServerProps(JsonData data){
+        String key = data.Data.get("key").toString();
+        String value = data.Data.get("value").toString();
+
+        Config conf = server.getProperties();
+        conf.set(key, value);
+
+        return new JsonResult(conf.save());
     }
 }
