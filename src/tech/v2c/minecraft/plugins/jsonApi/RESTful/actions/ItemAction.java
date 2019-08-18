@@ -1,4 +1,53 @@
 package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 
-public class ItemAction {
+import cn.nukkit.Player;
+import cn.nukkit.block.Block;
+import cn.nukkit.inventory.Inventory;
+import cn.nukkit.item.Item;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.tools.gameUtils.UserUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ItemAction extends BaseAction {
+    @ApiRoute(Path = "/api/Item/GetList")
+    public JsonResult GetItemList() {
+        Map<Integer, String> list = new HashMap<Integer, String>();
+        for (int i = 0; i < Item.list.length; i++) {
+            Item item = Item.get(i);
+            if(item.getName().toLowerCase().contains("unknown")){
+                continue;
+            }
+            list.put(item.getId(), item.getName());
+        }
+
+        return new JsonResult(list);
+    }
+
+    @ApiRoute(Path = "/api/Item/SendItemToUser")
+    public JsonResult SendItem(JsonData data) {
+        String userName = data.Data.get("name").toString();
+        int itemId = (int) Double.parseDouble(data.Data.get("item").toString());
+        Object count = data.Data.get("count");
+        Object meta = data.Data.get("meta");
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        if (player.getInventory().isFull()) {
+            return new JsonResult(null, 409, "Error: Player's Inventory is full.");
+        } else {
+            int firstEmpty = player.getInventory().firstEmpty(null);
+            Item item = Item.get(itemId, meta == null ? 100 : (int) Double.parseDouble(meta.toString()), count == null ? 1 : (int) Double.parseDouble(count.toString()));
+            if(item.getName().toLowerCase().contains("unknown")){
+                return new JsonResult(null, 404, "Error: item not found.");
+            }
+            return new JsonResult(player.getInventory().setItem(firstEmpty, item));
+        }
+    }
 }

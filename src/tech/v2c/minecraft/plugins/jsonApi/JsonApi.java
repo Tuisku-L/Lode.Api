@@ -49,6 +49,7 @@ public class JsonApi extends PluginBase{
         RouteManage.allAction.add(UserAction.class);
         RouteManage.allAction.add(ServerAction.class);
         RouteManage.allAction.add(PluginAction.class);
+        RouteManage.allAction.add(ItemAction.class);
     }
 
     private void InitPlugin(){
