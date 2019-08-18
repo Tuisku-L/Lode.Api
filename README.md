@@ -6,7 +6,7 @@ JSONAPI-Nukkit(X) 是一个用于 Nukkit(X) 服务器的插件。提供了访问
 **注意**：JSONAPI-Nukkit(X) 并不提供上述服务，您可以根据 JSONAPI-Nukkit(X) 提供的 API 自行实现相关的功能。
 
 # 重要说明
-JSONAPI-Nukkit(X) 还处于早期的**开发中**状态。JSONAPI-Nukkit(X) 的目录结构、API 地址、配置文件格式等均有可能在未来发生变化。**请务将当前版本的插件用于线上服务器中**。
+JSONAPI-Nukkit(X) 还处于早期的**开发中**状态。JSONAPI-Nukkit(X) 的目录结构、API 地址、配置文件格式等均有可能在未来发生变化。**请勿将当前版本的插件用于线上服务器中**。
 
 # 插件说明
 JSONAPI-Nukkit(X) 提供了使用 HTTP-API 调用 Nukkit(X) 底层功能的能力，可以实现大部分包括服务器管理、插件管理、用户管理等方面的功能。您可以在 Nukkit(X) 服务器安装有 JSONAPI-Nukkit(X) 的前提下，使用 HTTP-API 开发相关网站、App、商城系统等。也可以以 JSONAPI-Nukkit(X) 提供的 API 为基础，开发类似“云插件”（开发中）的功能（不限编程语言，无需安装至服务器）。
@@ -69,10 +69,10 @@ Server:
 # 开发相关
 
 ### 调试开关
-- 在 `(...)/RESTful/global/BaseHttpServer.java` 下有一个 `IS_DEBUG` 字段，将此字段设置为 true 时，调用 API 无需鉴权信息，如果您将要自己从源代码重新开发构建 JSONAPI-Nukkit(X) ，请注意此点。
+- `(...)/RESTful/global/BaseHttpServer.java` 下的 `IS_DEBUG` 字段为调试开关，将此字段设置为 true 时，调用 API 无需鉴权信息，如果您将要自己从源代码构建 JSONAPI-Nukkit(X) ，请注意此字段。
 
 ### 已知问题
-- 在调用 `/api/Server/ExecuteCommand` 以运行一条命令时，控制台将会抛出一个异常，原因是不在主线程执行命令时会抛出错误, 但是命令还是会正常执行. 等待 Nukkit(X)官方 修复此问题。
+- 在调用 `/api/Server/ExecuteCommand` 以运行一条命令时，控制台将会抛出一个异常，原因是不在主线程执行命令时会抛出错误，但是命令还是会正常执行。等待 Nukkit(X)官方修复此问题。
 
 # License
 MIT License
