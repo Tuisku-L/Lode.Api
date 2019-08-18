@@ -343,7 +343,7 @@ public class UserAction extends BaseAction {
     }
 
     @ApiRoute(Path = "/api/User/GetPlayerPosition")
-    public JsonResult GetPlayerPosition(JsonData data){
+    public JsonResult GetPlayerPosition(JsonData data) {
         String userName = data.Data.get("name").toString();
 
         Player player = UserUtils.GetPlayerByName(userName);
@@ -387,5 +387,51 @@ public class UserAction extends BaseAction {
         }
 
         return new JsonResult(result);
+    }
+
+    @ApiRoute(Path = "/api/User/GetPlayerHealth")
+    public JsonResult GetPlayerHealth(JsonData data) {
+        String userName = data.Data.get("name").toString();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        return new JsonResult(player.getHealth());
+    }
+
+    @ApiRoute(Path = "/api/User/SetPlayerHealth")
+    public JsonResult SetPlayerHealth(JsonData data) {
+        String userName = data.Data.get("name").toString();
+        float healthValue = Float.parseFloat(data.Data.get("value").toString());
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.setHealth(healthValue);
+
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/GetPlayerHunger")
+    public JsonResult GetPlayerHunger(JsonData data) {
+        String userName = data.Data.get("name").toString();
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        return new JsonResult(player.getFoodData().getLevel());
+    }
+
+    @ApiRoute(Path = "/api/User/SetPlayerHunger")
+    public JsonResult SetPlayerHunger(JsonData data) {
+        String userName = data.Data.get("name").toString();
+        int hungerValue = (int) Double.parseDouble(data.Data.get("value").toString());
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.getFoodData().setLevel(hungerValue);
+
+        return new JsonResult();
     }
 }
