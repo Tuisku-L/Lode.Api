@@ -2,6 +2,7 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.event.player.PlayerKickEvent;
 import cn.nukkit.permission.BanEntry;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
@@ -149,32 +150,32 @@ public class UserAction extends BaseAction {
         String userName = data.Data.get("name").toString();
         int gameMode = (int) Double.parseDouble(data.Data.get("gameMode").toString());
         Player user = UserUtils.GetPlayerByName(userName);
-        if(user == null) return new JsonResult(null, 404, "Error: user not found.");
+        if (user == null) return new JsonResult(null, 404, "Error: user not found.");
 
         return new JsonResult(user.setGamemode(gameMode));
     }
 
     @ApiRoute(Path = "/api/User/SendChat")
-    public JsonResult SendChat(JsonData data){
+    public JsonResult SendChat(JsonData data) {
         String userName = data.Data.get("name").toString();
         String message = data.Data.get("message").toString();
         Object source = data.Data.get("source");
 
         Player player = UserUtils.GetPlayerByName(userName);
-        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.sendChat(source == null ? "" : source.toString(), message);
-        
+
         return new JsonResult();
     }
 
     @ApiRoute(Path = "/api/User/SendMessage")
-    public JsonResult SendMessage(JsonData data){
+    public JsonResult SendMessage(JsonData data) {
         String userName = data.Data.get("name").toString();
         String message = data.Data.get("message").toString();
 
         Player player = UserUtils.GetPlayerByName(userName);
-        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.sendMessage(message);
 
@@ -182,17 +183,17 @@ public class UserAction extends BaseAction {
     }
 
     @ApiRoute(Path = "/api/User/SendExperience")
-    public JsonResult SendExperience(JsonData data){
+    public JsonResult SendExperience(JsonData data) {
         String userName = data.Data.get("name").toString();
-        int expType = (int)Double.parseDouble(data.Data.get("type").toString());
-        int value = (int)Double.parseDouble(data.Data.get("value").toString());
+        int expType = (int) Double.parseDouble(data.Data.get("type").toString());
+        int value = (int) Double.parseDouble(data.Data.get("value").toString());
 
         Player player = UserUtils.GetPlayerByName(userName);
-        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
-        if(expType == 0){
+        if (expType == 0) {
             player.sendExperience(value);
-        }else{
+        } else {
             player.sendExperienceLevel(value);
         }
 
@@ -200,25 +201,39 @@ public class UserAction extends BaseAction {
     }
 
     @ApiRoute(Path = "/api/User/SetPlayerFire")
-    public JsonResult SetPlayerFire(JsonData data){
+    public JsonResult SetPlayerFire(JsonData data) {
         String userName = data.Data.get("name").toString();
-        int time = (int)Double.parseDouble(data.Data.get("time").toString());
+        int time = (int) Double.parseDouble(data.Data.get("time").toString());
 
         Player player = UserUtils.GetPlayerByName(userName);
-        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.setOnFire(time);
         return new JsonResult();
     }
 
     @ApiRoute(Path = "/api/User/KillPlayer")
-    public JsonResult KillPlayer(JsonData data){
+    public JsonResult KillPlayer(JsonData data) {
         String userName = data.Data.get("name").toString();
 
         Player player = UserUtils.GetPlayerByName(userName);
-        if(player == null) return new JsonResult(null, 404, "Error: user not found.");
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.kill();
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/KickPlayer")
+    public JsonResult KickPlayer(JsonData data) {
+        String userName = data.Data.get("name").toString();
+        boolean isKickByAdmin = (boolean) data.Data.get("isKickByAdmin");
+        Object reason = data.Data.get("reason");
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.kick(reason == null ? PlayerKickEvent.Reason.UNKNOWN.toString() : reason.toString(), isKickByAdmin);
+
         return new JsonResult();
     }
 }
