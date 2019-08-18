@@ -34,6 +34,20 @@ public class ItemAction extends BaseAction {
         return new JsonResult(list);
     }
 
+    @ApiRoute(Path = "/api/Item/GetItemInfo")
+    public JsonResult GetItemInfo(JsonData data){
+        int itemId = (int) Double.parseDouble(data.Data.get("item").toString());
+
+        Item item = Item.get(itemId);
+
+        ItemDTO itemDTO = new ItemDTO();
+        itemDTO.setId(item.getId());
+        itemDTO.setName(item.getName());
+        itemDTO.setHasMeta(item.hasMeta());
+
+        return new JsonResult(itemDTO);
+    }
+
     @ApiRoute(Path = "/api/Item/SendItemToUser")
     public JsonResult SendItem(JsonData data) {
         String userName = data.Data.get("name").toString();
