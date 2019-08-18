@@ -7,6 +7,7 @@ import cn.nukkit.item.Item;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
+import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.item.ItemDTO;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
 import tech.v2c.minecraft.plugins.jsonApi.tools.gameUtils.UserUtils;
 
@@ -17,13 +18,17 @@ import java.util.Map;
 public class ItemAction extends BaseAction {
     @ApiRoute(Path = "/api/Item/GetList")
     public JsonResult GetItemList() {
-        Map<Integer, String> list = new HashMap<Integer, String>();
+        ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
         for (int i = 0; i < Item.list.length; i++) {
             Item item = Item.get(i);
             if(item.getName().toLowerCase().contains("unknown")){
                 continue;
             }
-            list.put(item.getId(), item.getName());
+            ItemDTO itemDTO = new ItemDTO();
+            itemDTO.setId(item.getId());
+            itemDTO.setName(item.getName());
+            itemDTO.setHasMeta(item.hasMeta());
+            list.add(itemDTO);
         }
 
         return new JsonResult(list);
