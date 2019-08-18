@@ -23,8 +23,29 @@ public class UserAction extends BaseAction {
     @ApiRoute(Path = "/api/User/GetUserByName")
     public JsonResult GetUserByName(JsonData data) {
         String searchName = data.Data.get("name").toString();
-        Player player = UserUtils.GetPlayerByName(searchName);
-        return new JsonResult(player);
+
+        Player user = UserUtils.GetPlayerByName(searchName);
+        if (user == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        OnlineUserDTO onlineUser = new OnlineUserDTO();
+        onlineUser.setName(user.getName());
+        onlineUser.setDisplayName(user.getDisplayName());
+        onlineUser.setId(user.getId());
+        onlineUser.setUid(user.getUniqueId());
+        onlineUser.setGamemode(user.getGamemode());
+        onlineUser.setHeight(user.getHeight());
+        onlineUser.setHealth(user.getHealth());
+        onlineUser.setMaxHealth(user.getMaxHealth());
+        onlineUser.setPing(user.getPing());
+
+        UserPositionDTO up = new UserPositionDTO();
+        up.setX(user.getPosition().getX());
+        up.setY(user.getPosition().getY());
+        up.setZ(user.getPosition().getZ());
+
+        onlineUser.setPosition(up);
+
+        return new JsonResult(onlineUser);
     }
 
     @ApiRoute(Path = "/api/User/GetOnlineList")
