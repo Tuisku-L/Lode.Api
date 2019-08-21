@@ -26,7 +26,7 @@ public class JsonApi extends PluginBase{
     }
 
     @Override
-    public void onLoad() {
+    public void onEnable() {
         InitPlugin();
         InitActions();
         RouteManage.RegisterRoute();
