@@ -1,5 +1,6 @@
 package tech.v2c.minecraft.plugins.jsonApi.tools;
 
+import com.google.gson.Gson;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -27,9 +28,11 @@ public class YamlUtils {
         yaml.dump(dataMap, new FileWriter(dest));
     }
 
-    public static Object GetValue(File source, String key) throws IOException {
+    public static <T> T GetValue(File source, String key, Class<T> classOfT) throws IOException {
         Yaml yaml = new Yaml(OPTIONS);
         Map<String, Object> dataMap = (Map<String, Object>) yaml.load(new FileReader(source));
-        return dataMap.get(key);
+        Gson gson = new Gson();
+        String json = gson.toJson((dataMap.get(key)));
+        return gson.fromJson(json, classOfT);
     }
 }
