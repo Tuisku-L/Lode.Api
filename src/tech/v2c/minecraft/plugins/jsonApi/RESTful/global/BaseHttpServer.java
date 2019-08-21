@@ -19,8 +19,8 @@ public class BaseHttpServer extends NanoHTTPD {
     public static final boolean IS_DEBUG = true;
     public static BaseHttpServer instance;
 
-    public BaseHttpServer() throws IOException {
-        super(JsonApi.serverPort);
+    public BaseHttpServer() {
+        super(JsonApi.config.getHttpPort());
         BaseHttpServer.instance = this;
     }
 
@@ -99,7 +99,7 @@ public class BaseHttpServer extends NanoHTTPD {
     }
 
     private String GetAuthentication(String url) {
-        String base = JsonApi.userName + url + JsonApi.password;
+        String base = JsonApi.config.getAuthentication().getUserName() + url + JsonApi.config.getAuthentication().getPassword();
         return EncryptUtils.EncodeBySHA256(base);
     }
 

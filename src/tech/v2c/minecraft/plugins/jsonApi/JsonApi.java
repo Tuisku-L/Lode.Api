@@ -1,6 +1,5 @@
 package tech.v2c.minecraft.plugins.jsonApi;
 
-import cn.nukkit.command.ConsoleCommandSender;
 import cn.nukkit.plugin.PluginBase;
 
 import org.nanohttpd.util.ServerRunner;
@@ -9,19 +8,16 @@ import tech.v2c.minecraft.plugins.jsonApi.RESTful.actions.*;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseHttpServer;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.RouteManage;
 import tech.v2c.minecraft.plugins.jsonApi.tools.YamlUtils;
+import tech.v2c.minecraft.plugins.jsonApi.tools.configEntities.ServerConfig;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class JsonApi extends PluginBase{
+public class JsonApi extends PluginBase {
     public static JsonApi instance;
-    public static int serverPort;
-    public static String userName;
-    public static String password;
+    public static ServerConfig config;
 
-    public JsonApi(){
+    public JsonApi() {
         JsonApi.instance = this;
     }
 
@@ -30,66 +26,63 @@ public class JsonApi extends PluginBase{
         InitPlugin();
         InitActions();
         RouteManage.RegisterRoute();
-        (new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ServerRunner.run(BaseHttpServer.class);
-            }
-        })).start();
-        getLogger().info("JsonAPI Server run at: " + this.serverPort);
+        (new Thread(() -> ServerRunner.run(BaseHttpServer.class))).start();
+        getLogger().info("JsonAPI Http Server running at: " + this.config.getHttpPort());
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         BaseHttpServer.instance.stop();
         getLogger().info("JsonAPI Server is shutdown.");
     }
 
-    private void InitActions(){
+    private void InitActions() {
         RouteManage.allAction.add(UserAction.class);
         RouteManage.allAction.add(ServerAction.class);
         RouteManage.allAction.add(PluginAction.class);
         RouteManage.allAction.add(ItemAction.class);
     }
 
-    private void InitPlugin(){
+    private void InitPlugin() {
         String configPath = getServer().getPluginPath() + "/JsonApi";
         File dir = new File(configPath);
-        if(!dir.exists()){
-            if(dir.mkdir()){
+        if (!dir.exists()) {
+            if (dir.mkdir()) {
                 File configFile = new File(configPath + "/config.yml");
                 try {
-                    if(configFile.createNewFile()){
-                        YamlUtils.SetValue(configFile, "Server", GetDefaultConfig());
+                    if (configFile.createNewFile()) {
+                        YamlUtils.SetValue(configFile, "Server", DefaultConfig());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }else{
-            File configFile = new File(configPath + "/config.yml");
-            try {
-                this.serverPort = (int)(((Map<String, Object>)YamlUtils.GetValue(configFile, "Server")).get("Port"));
-                this.userName = ((Map<String, String>)((Map<String, Object>)YamlUtils.GetValue(configFile, "Server")).get("Authentication")).get("UserName");
-                this.password = ((Map<String, String>)((Map<String, Object>)YamlUtils.GetValue(configFile, "Server")).get("Authentication")).get("Password");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
+
+        this.config = GetConfig();
     }
 
-    private Map GetDefaultConfig(){
-        Map initConfig = new HashMap<String, Object>(){{
-            this.put("IP", "0.0.0.0");
-            this.put("Port", 19133);
-            this.put("Authentication", new HashMap<String, Object>(){{
-                this.put("UserName", "root");
-                this.put("Password", "password");
-            }});
-        }};
+    private ServerConfig DefaultConfig() {
+        ServerConfig config = new ServerConfig();
+        ServerConfig.Authentication auth = new ServerConfig.Authentication();
+        auth.setUserName("root");
+        auth.setPassword("password");
+        config.setAuthentication(auth);
+        config.setIP("0.0.0.0");
+        config.setHttpPort(this.getServer().getPort() + 1);
+        config.setWsPort(this.getServer().getPort() + 2);
 
-        this.serverPort = 19133;
+        return config;
+    }
 
-        return initConfig;
+    private ServerConfig GetConfig(){
+        String configPath = getServer().getPluginPath() + "/JsonApi";
+        File configFile = new File(configPath + "/config.yml");
+        try {
+            return YamlUtils.GetValue(configFile, "Server", ServerConfig.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
