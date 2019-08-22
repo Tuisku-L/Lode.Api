@@ -8,28 +8,12 @@ public class ServerDTO {
     private int maxPlayerCount;
     private String motd;
     private String subMotd;
-    private String NukkitVersion;
-    private String ApiVersion;
+    private String nukkitVersion;
+    private String apiVersion;
     private int gameMode;
     private int difficulty;
     private int pluginCount;
     private boolean isAutoSave;
-
-    public boolean isAutoSave() {
-        return isAutoSave;
-    }
-
-    public void setAutoSave(boolean autoSave) {
-        isAutoSave = autoSave;
-    }
-
-    public int getPluginCount() {
-        return pluginCount;
-    }
-
-    public void setPluginCount(int pluginCount) {
-        this.pluginCount = pluginCount;
-    }
 
     public int getPort() {
         return port;
@@ -88,19 +72,19 @@ public class ServerDTO {
     }
 
     public String getNukkitVersion() {
-        return NukkitVersion;
+        return nukkitVersion;
     }
 
     public void setNukkitVersion(String nukkitVersion) {
-        NukkitVersion = nukkitVersion;
+        this.nukkitVersion = nukkitVersion;
     }
 
     public String getApiVersion() {
-        return ApiVersion;
+        return apiVersion;
     }
 
     public void setApiVersion(String apiVersion) {
-        ApiVersion = apiVersion;
+        this.apiVersion = apiVersion;
     }
 
     public int getGameMode() {
@@ -117,5 +101,21 @@ public class ServerDTO {
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public int getPluginCount() {
+        return pluginCount;
+    }
+
+    public void setPluginCount(int pluginCount) {
+        this.pluginCount = pluginCount;
+    }
+
+    public boolean isAutoSave() {
+        return isAutoSave;
+    }
+
+    public void setAutoSave(boolean autoSave) {
+        isAutoSave = autoSave;
     }
 }
