@@ -3,7 +3,7 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.global;
 import com.google.gson.Gson;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.tools.results.JsonResult;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

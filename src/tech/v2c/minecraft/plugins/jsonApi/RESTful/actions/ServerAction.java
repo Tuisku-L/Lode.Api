@@ -9,7 +9,7 @@ import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.server.ServerDTO;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.tools.results.JsonResult;
 
 import java.util.Timer;
 import java.util.TimerTask;

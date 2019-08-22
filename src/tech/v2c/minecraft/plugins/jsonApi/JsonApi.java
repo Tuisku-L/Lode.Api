@@ -4,6 +4,9 @@ import cn.nukkit.plugin.PluginBase;
 
 import org.nanohttpd.util.ServerRunner;
 
+import tech.v2c.minecraft.plugins.jsonApi.EventNotify.Events.*;
+import tech.v2c.minecraft.plugins.jsonApi.EventNotify.global.EventManage;
+import tech.v2c.minecraft.plugins.jsonApi.EventNotify.global.JsonApiWebSocketServer;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.actions.*;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseHttpServer;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.RouteManage;
@@ -25,9 +28,17 @@ public class JsonApi extends PluginBase {
     public void onEnable() {
         InitPlugin();
         InitActions();
+        InitEvents();
+
         RouteManage.RegisterRoute();
+        getLogger().info("Finish register actions.");
+        EventManage.RegisterEventListener();
+        getLogger().info("Finish register events.");
+
         (new Thread(() -> ServerRunner.run(BaseHttpServer.class))).start();
         getLogger().info("JsonAPI Http Server running at: " + this.config.getHttpPort());
+        (new Thread(() -> new JsonApiWebSocketServer().start())).start();
+        getLogger().info("JsonAPI WebSocket Server running at: " + this.config.getWsPort());
     }
 
     @Override
@@ -41,6 +52,10 @@ public class JsonApi extends PluginBase {
         RouteManage.allAction.add(ServerAction.class);
         RouteManage.allAction.add(PluginAction.class);
         RouteManage.allAction.add(ItemAction.class);
+    }
+
+    private void InitEvents(){
+        EventManage.allEvent.add(new CommandEvent());
     }
 
     private void InitPlugin() {

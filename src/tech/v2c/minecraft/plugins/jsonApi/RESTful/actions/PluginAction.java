@@ -1,14 +1,12 @@
 package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 
-import cn.nukkit.Server;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.plugin.PluginManager;
-import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.annotations.ApiRoute;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.JsonData;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.entities.server.PluginDTO;
-import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results.JsonResult;
+import tech.v2c.minecraft.plugins.jsonApi.tools.results.JsonResult;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package tech.v2c.minecraft.plugins.jsonApi.RESTful.global.results;
+package tech.v2c.minecraft.plugins.jsonApi.tools.results;
 
 public class JsonResult {
     private int code;
