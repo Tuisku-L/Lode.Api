@@ -66,7 +66,8 @@ public class JsonApi extends PluginBase {
     }
 
     private void InitEvents(){
-        EventManage.allEvent.add(new CommandEvent());
+        EventManage.allEvent.put("ServerCommand", new CommandEvent());
+        EventManage.allEvent.put("PlayerChat", new PlayerTalkEvent());
     }
 
     private void InitPlugin() {
