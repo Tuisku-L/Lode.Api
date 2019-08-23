@@ -15,7 +15,7 @@ public class JsonApiWebSocketServer extends WebSocketServer {
     public static HashMap<Object, WebSocket> connPool = new HashMap<Object, WebSocket>();
 
     public JsonApiWebSocketServer(){
-        super(new InetSocketAddress(JsonApi.config.getIP(), JsonApi.config.getWsPort()));
+        super(new InetSocketAddress(JsonApi.instance.getConfig().getSection("Server").getString("IP"), JsonApi.instance.getConfig().getSection("Server").getInt("WsPort")));
     }
 
     public static void SendMsg(JsonResult result){

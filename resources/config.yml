@@ -1,0 +1,7 @@
+Server:
+  IP: 0.0.0.0
+  Authentication:
+    Password: password
+    UserName: root
+  HttpPort: 19133
+  WsPort: 19134

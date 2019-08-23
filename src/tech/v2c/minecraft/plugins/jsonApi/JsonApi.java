@@ -2,6 +2,9 @@ package tech.v2c.minecraft.plugins.jsonApi;
 
 import cn.nukkit.plugin.PluginBase;
 
+import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
+import org.java_websocket.server.WebSocketServer;
 import org.nanohttpd.util.ServerRunner;
 
 import tech.v2c.minecraft.plugins.jsonApi.EventNotify.Events.*;
@@ -18,7 +21,8 @@ import java.io.IOException;
 
 public class JsonApi extends PluginBase {
     public static JsonApi instance;
-    public static ServerConfig config;
+
+    private JsonApiWebSocketServer ws;
 
     public JsonApi() {
         JsonApi.instance = this;
@@ -36,15 +40,24 @@ public class JsonApi extends PluginBase {
         getLogger().info("Finish register events.");
 
         (new Thread(() -> ServerRunner.run(BaseHttpServer.class))).start();
-        getLogger().info("JsonAPI Http Server running at: " + this.config.getHttpPort());
-        (new Thread(() -> new JsonApiWebSocketServer().start())).start();
-        getLogger().info("JsonAPI WebSocket Server running at: " + this.config.getWsPort());
+        getLogger().info("JsonAPI Http Server running at: " + getConfig().getSection("Server").getInt("HttpPort"));
+        ws  = new JsonApiWebSocketServer();
+        (new Thread(() -> ws.start())).start();
+        getLogger().info("JsonAPI WebSocket Server running at: " + getConfig().getSection("Server").getInt("WsPort"));
     }
 
     @Override
     public void onDisable() {
         BaseHttpServer.instance.stop();
-        getLogger().info("JsonAPI Server is shutdown.");
+        getLogger().info("JsonAPI Http Server is shutdown.");
+        try {
+            ws.stop();
+            getLogger().info("JsonAPI WebSocket Server is shutdown.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void InitActions() {
@@ -59,45 +72,6 @@ public class JsonApi extends PluginBase {
     }
 
     private void InitPlugin() {
-        String configPath = getServer().getPluginPath() + "/JsonApi";
-        File dir = new File(configPath);
-        if (!dir.exists()) {
-            if (dir.mkdir()) {
-                File configFile = new File(configPath + "/config.yml");
-                try {
-                    if (configFile.createNewFile()) {
-                        YamlUtils.SetValue(configFile, "Server", DefaultConfig());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        this.config = GetConfig();
-    }
-
-    private ServerConfig DefaultConfig() {
-        ServerConfig config = new ServerConfig();
-        ServerConfig.Authentication auth = new ServerConfig.Authentication();
-        auth.setUserName("root");
-        auth.setPassword("password");
-        config.setAuthentication(auth);
-        config.setIP("0.0.0.0");
-        config.setHttpPort(this.getServer().getPort() + 1);
-        config.setWsPort(this.getServer().getPort() + 2);
-
-        return config;
-    }
-
-    private ServerConfig GetConfig(){
-        String configPath = getServer().getPluginPath() + "/JsonApi";
-        File configFile = new File(configPath + "/config.yml");
-        try {
-            return YamlUtils.GetValue(configFile, "Server", ServerConfig.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        saveDefaultConfig();
     }
 }
