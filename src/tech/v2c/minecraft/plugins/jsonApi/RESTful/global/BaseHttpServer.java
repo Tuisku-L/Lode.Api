@@ -1,6 +1,7 @@
 package tech.v2c.minecraft.plugins.jsonApi.RESTful.global;
 
-import cn.nukkit.command.ConsoleCommandSender;
+import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
 import com.google.gson.Gson;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
@@ -20,7 +21,7 @@ public class BaseHttpServer extends NanoHTTPD {
     public static BaseHttpServer instance;
 
     public BaseHttpServer() {
-        super(JsonApi.config.getHttpPort());
+        super(JsonApi.instance.getConfig().getSection("Server").getInt("HttpPort"));
         BaseHttpServer.instance = this;
     }
 
@@ -99,7 +100,8 @@ public class BaseHttpServer extends NanoHTTPD {
     }
 
     private String GetAuthentication(String url) {
-        String base = JsonApi.config.getAuthentication().getUserName() + url + JsonApi.config.getAuthentication().getPassword();
+        ConfigSection conf = JsonApi.instance.getConfig().getSection("Server").getSection("Authentication");
+        String base = conf.getString("UserName") + url + conf.getString("Password");
         return EncryptUtils.EncodeBySHA256(base);
     }
 
