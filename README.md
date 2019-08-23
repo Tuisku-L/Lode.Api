@@ -84,6 +84,10 @@ DebugMode: true
 - EventListener.EventList 如果 `EventListener.IsEnable` 为 true ，则这个列表下的事件会被 JSONAPI-Nukkit(X) 监听，并且通过 WebSocket 发送实时通知。
 - DebugMode 配置是否启动 Debug 模式，若为 true 则会在控制台输出调试信息并且调用 API 时无需鉴权信息。
 
+# 下载
+
+你可以查阅 [release 页面](release) 下载最新的构建版本。
+
 # 开发相关
 
 ### 已知问题
