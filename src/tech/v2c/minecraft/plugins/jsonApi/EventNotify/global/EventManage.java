@@ -11,9 +11,9 @@ public class EventManage {
     public static HashMap<String, Listener> allEvent = new HashMap<String, Listener> ();
 
     public static void RegisterEventListener(){
-        List listenEvent = JsonApi.instance.getConfig().getList("EventListener");
+        List events = JsonApi.instance.getConfig().getSection("EventListener").getList("EventList");
         allEvent.entrySet().forEach(val -> {
-            if(listenEvent.contains(val.getKey())){
+            if(events.contains(val.getKey())){
                 EventUtils.RegisterEvent(val.getValue());
             }
         });
