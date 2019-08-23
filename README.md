@@ -54,7 +54,7 @@ sha256(userName + api_url.toLowerCase() + password)
 > sha256( "exampleUser" + "/api/Server/GetServerInfo".toLowerCase() + "testpass" )
 
 # 配置文件
-JSONAPI-Nukkit(X) 的配置文件位于服务器的 `plugins/jsonApi` 文件夹下，初次启动插件会自动生成配置文件，您可以根据需要自行修改。配置文件的格式如下：
+JSONAPI-Nukkit(X) 的配置文件位于服务器的 `plugins/JSONAPI` 文件夹下，初次启动插件会自动生成配置文件，您可以根据需要自行修改。配置文件的格式如下：
 
 ```YAML
 Server:
@@ -70,6 +70,8 @@ EventListener:
   EventList:
     - ServerCommand
     - PlayerChat
+
+DebugMode: true
 ```
 
 ## 配置文件说明
@@ -80,11 +82,9 @@ EventListener:
 - Server.WsPort 是 W1ebSocket 服务器监听的端口，**请不要与 Nukkit(X) 本身的端口冲突**。
 - EventListener.IsEnable 配置事件通知的 WebSocket 服务是否启用。
 - EventListener.EventList 如果 `EventListener.IsEnable` 为 true ，则这个列表下的事件会被 JSONAPI-Nukkit(X) 监听，并且通过 WebSocket 发送实时通知。
+- DebugMode 配置是否启动 Debug 模式，若为 true 则会在控制台输出调试信息并且调用 API 时无需鉴权信息。
 
 # 开发相关
-
-### 调试开关
-- `(...)/RESTful/global/BaseHttpServer.java` 下的 `IS_DEBUG` 字段为调试开关，将此字段设置为 true 时，调用 API 无需鉴权信息，如果您将要自己从源代码构建 JSONAPI-Nukkit(X) ，请注意此字段。
 
 ### 已知问题
 - 在调用 `/api/Server/ExecuteCommand` 以运行一条命令时，控制台将会抛出一个异常，原因是不在主线程执行命令时会抛出错误，但是命令还是会正常执行。等待 Nukkit(X)官方修复此问题。
