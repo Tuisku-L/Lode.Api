@@ -1,4 +1,9 @@
-<h1 align="center">JSONAPI-Nukkit(X)</h1>
+<h1 align="center">
+    JSONAPI-Nukkit(X)
+</h1>
+
+[![](https://img.shields.io/badge/NUKKIT-1.0-blue?style=flat-square)](https://ci.nukkitx.com/job/NukkitX/job/Nukkit/job/master/)
+[![](https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square)](./LICENSE)
 
 # 简介
 JSONAPI-Nukkit(X) 是一个用于 Nukkit(X) 服务器的插件。提供了访问服务器各种数据和功能的 HTTP-API 接口。你可以通过这些接口来制作网站、App，以及提供让玩家在线购买物品并且在游戏中自动接收相关物品的能力。
@@ -6,7 +11,7 @@ JSONAPI-Nukkit(X) 是一个用于 Nukkit(X) 服务器的插件。提供了访问
 **注意**：JSONAPI-Nukkit(X) 并不提供上述服务，您可以根据 JSONAPI-Nukkit(X) 提供的 API 自行实现相关的功能。
 
 # 重要说明
-JSONAPI-Nukkit(X) 还处于早期的**开发中**状态。JSONAPI-Nukkit(X) 的目录结构、API 地址、配置文件格式等均有可能在未来发生变化。**请勿将当前版本的插件用于线上服务器中**。
+JSONAPI-Nukkit(X) 还处于早期的**开发中**状态。JSONAPI-Nukkit(X) 的目录结构、API 地址、配置文件格式等均有可能在未来发生变化。**不建议将当前版本的插件用于重要的线上服务器中**。
 
 # 插件说明
 JSONAPI-Nukkit(X) 提供了使用 HTTP-API 调用 Nukkit(X) 底层功能的能力，可以实现大部分包括服务器管理、插件管理、用户管理等方面的功能。您可以在 Nukkit(X) 服务器安装有 JSONAPI-Nukkit(X) 的前提下，使用 HTTP-API 开发相关网站、App、商城系统等。也可以以 JSONAPI-Nukkit(X) 提供的 API 为基础，开发类似“云插件”（开发中）的功能（不限编程语言，无需安装至服务器）。
@@ -53,18 +58,28 @@ JSONAPI-Nukkit(X) 的配置文件位于服务器的 `plugins/jsonApi` 文件夹�
 
 ```YAML
 Server:
-  Authentication:
-    UserName: root
-    Password: password
   IP: 0.0.0.0
-  Port: 19133
+  Authentication:
+    Password: password
+    UserName: root
+  HttpPort: 19133
+  WsPort: 19134
+
+EventListener:
+  IsEnable: true
+  EventList:
+    - ServerCommand
+    - PlayerChat
 ```
 
 ## 配置文件说明
 
-- Server.Authentication 是 API 鉴权所需要的用户名和密码，请自行修改。
-- Server.IP 是配置 API 服务器监听的 IP 地址，此配置暂时未启用。
-- Server.Port 是 API 服务器监听的端口。一般我们建议选择与 Nukkit(X) 服务器（默认为 19132）不同的端口。但是如果实际情况不允许，也可以使用 19132 端口进行监听（因为 Nukkit(X) 只对 19132 端口进行 UDP 监听，API 服务器则使用 TCP）。
+- Server.Authentication 是 API 鉴权所需要的用户名和密码。
+- Server.IP 是配置 WebSocket 服务器监听的 IP 地址。
+- Server.HttpPort 是 API 服务器监听的端口，**请不要与 Nukkit(X) 本身的端口冲突**。
+- Server.WsPort 是 W1ebSocket 服务器监听的端口，**请不要与 Nukkit(X) 本身的端口冲突**。
+- EventListener.IsEnable 配置事件通知的 WebSocket 服务是否启用。
+- EventListener.EventList 如果 `EventListener.IsEnable` 为 true ，则这个列表下的事件会被 JSONAPI-Nukkit(X) 监听，并且通过 WebSocket 发送实时通知。
 
 # 开发相关
 
@@ -73,6 +88,9 @@ Server:
 
 ### 已知问题
 - 在调用 `/api/Server/ExecuteCommand` 以运行一条命令时，控制台将会抛出一个异常，原因是不在主线程执行命令时会抛出错误，但是命令还是会正常执行。等待 Nukkit(X)官方修复此问题。
+
+# 更新日志
+本项目遵从 [Angular Style Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)，更新日志由 `conventional-changelog` 自动生成。完整日志请点击 [CHANGELOG.md](./CHANGELOG.md)。
 
 # License
 MIT License
