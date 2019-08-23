@@ -2,6 +2,7 @@ package tech.v2c.minecraft.plugins.jsonApi;
 
 import cn.nukkit.plugin.PluginBase;
 
+import org.jline.utils.Log;
 import org.nanohttpd.util.ServerRunner;
 
 import tech.v2c.minecraft.plugins.jsonApi.EventNotify.Events.*;
@@ -10,6 +11,7 @@ import tech.v2c.minecraft.plugins.jsonApi.EventNotify.global.JsonApiWebSocketSer
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.actions.*;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseHttpServer;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.RouteManage;
+import tech.v2c.minecraft.plugins.jsonApi.tools.LogUtils;
 
 import java.io.IOException;
 
@@ -32,29 +34,29 @@ public class JsonApi extends PluginBase {
 
         InitActions();
         RouteManage.RegisterRoute();
-        getLogger().info("Finish register actions.");
+        LogUtils.Info("Finish register actions.");
         (new Thread(() -> ServerRunner.run(BaseHttpServer.class))).start();
-        getLogger().info("JsonAPI Http Server running at: " + getConfig().getSection("Server").getInt("HttpPort"));
+        LogUtils.Info("JsonAPI Http Server running at: " + getConfig().getSection("Server").getInt("HttpPort"));
 
-        if(this.isEnableWs){
+        if (this.isEnableWs) {
             InitEvents();
             EventManage.RegisterEventListener();
-            getLogger().info("Finish register events.");
-            ws  = new JsonApiWebSocketServer();
+            LogUtils.Info("Finish register events.");
+            ws = new JsonApiWebSocketServer();
             (new Thread(() -> ws.start())).start();
-            getLogger().info("JsonAPI WebSocket Server running at: " + getConfig().getSection("Server").getInt("WsPort"));
+            LogUtils.Info("JsonAPI WebSocket Server running at: " + getConfig().getSection("Server").getInt("WsPort"));
         }
     }
 
     @Override
     public void onDisable() {
         BaseHttpServer.instance.stop();
-        getLogger().info("JsonAPI Http Server is shutdown.");
+        LogUtils.Info("JsonAPI Http Server is shutdown.");
 
-        if(this.isEnableWs && ws != null){
+        if (this.isEnableWs && ws != null) {
             try {
                 ws.stop();
-                getLogger().info("JsonAPI WebSocket Server is shutdown.");
+                LogUtils.Info("JsonAPI WebSocket Server is shutdown.");
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -70,10 +72,12 @@ public class JsonApi extends PluginBase {
         RouteManage.allAction.add(ItemAction.class);
     }
 
-    private void InitEvents(){
-        if(this.isEnableWs){
+    private void InitEvents() {
+        if (this.isEnableWs) {
             EventManage.allEvent.put("ServerCommand", new CommandEvent());
             EventManage.allEvent.put("PlayerChat", new PlayerTalkEvent());
+        } else {
+            LogUtils.Debug("JsonApi websocket server is not enable.");
         }
     }
 
