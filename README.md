@@ -19,7 +19,7 @@ JSONAPI-Nukkit(X) 提供了使用 HTTP-API 调用 Nukkit(X) 底层功能的能�
 ## API 相关信息
 
 ### API 文档
-**暂无，整理中。可自行查看各个 action 上方的 `ApiRoute` 注解。**
+请至 JSONAPI-Nukkit(X) 的 [Wiki](https://github.com/Tuisku-L/JSONAPI-NukkitX/wiki) 页面查阅相关说明和 API 文档。
 
 ### 调用方式
 
@@ -86,7 +86,7 @@ DebugMode: true
 
 # 下载
 
-你可以查阅 [release 页面](release) 下载最新的构建版本。
+你可以查阅 [release 页面](https://github.com/Tuisku-L/JSONAPI-NukkitX/releases) 并下载最新的构建版本。
 
 # 开发相关
 
