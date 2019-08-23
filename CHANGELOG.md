@@ -3,6 +3,7 @@
 
 ### Bug Fixes
 
+* 修复 全局日志输出类空指针 ([bf6ec47](https://github.com/Tuisku-L/JSONAPI-NukkitX/commit/bf6ec47))
 * 修复 获取玩家信息 API. ([1e8384c](https://github.com/Tuisku-L/JSONAPI-NukkitX/commit/1e8384c))
 
 
