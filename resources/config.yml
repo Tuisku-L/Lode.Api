@@ -11,3 +11,5 @@ EventListener:
   EventList:
     - ServerCommand
     - PlayerChat
+
+DebugMode: true

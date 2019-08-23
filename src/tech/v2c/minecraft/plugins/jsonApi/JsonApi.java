@@ -20,6 +20,8 @@ public class JsonApi extends PluginBase {
 
     private static boolean isEnableWs;
 
+    public static boolean isDebugMode;
+
     public JsonApi() {
         JsonApi.instance = this;
     }
@@ -79,5 +81,6 @@ public class JsonApi extends PluginBase {
         saveDefaultConfig();
 
         this.isEnableWs = getConfig().getSection("EventListener").getBoolean("IsEnable");
+        this.isDebugMode = getConfig().getBoolean("DebugMode");
     }
 }

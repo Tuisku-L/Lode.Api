@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BaseHttpServer extends NanoHTTPD {
-    public static final boolean IS_DEBUG = true;
     public static BaseHttpServer instance;
 
     public BaseHttpServer() {
@@ -28,7 +27,7 @@ public class BaseHttpServer extends NanoHTTPD {
     @Override
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
-        if (!IS_DEBUG) {
+        if (!JsonApi.instance.isDebugMode) {
             String clientAuthStr = session.getHeaders().get("x-jsonapi-authentication");
             if (clientAuthStr == null) {
                 return Response.newFixedLengthResponse(Status.UNAUTHORIZED, MIME_PLAINTEXT, "Error:  401 Unauthorized. Need Authentication.");
@@ -43,7 +42,7 @@ public class BaseHttpServer extends NanoHTTPD {
         Map<String, List<String>> parameters = session.getParameters();
         JsonData jsonData = new Gson().fromJson(GetQueryString(parameters, "Data"), JsonData.class);
 
-        if(!IS_DEBUG){
+        if(!JsonApi.instance.isDebugMode){
             if (!CheckTimestamp(jsonData.TimeStamp)) {
                 return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Timeout.");
             }
