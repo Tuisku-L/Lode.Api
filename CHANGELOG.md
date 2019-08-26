@@ -1,3 +1,15 @@
+#  (2019-08-26)
+
+
+### Bug Fixes
+
+* 修复 当配置文件中 EventList 为空或无 EventList 配置项时导致插件启动异常 ([59b3245](https://github.com/Tuisku-L/JSONAPI-NukkitX/commit/59b3245))
+
+### Features
+
+
+* 添加 ServerConsole 监听, 通过 WebSocket 获取服务器实时输出, 通过 WebSocket 执行命令(开关) ([a68dfad](https://github.com/Tuisku-L/JSONAPI-NukkitX/commit/a68dfad))
+
 #  (2019-08-23)
 
 
