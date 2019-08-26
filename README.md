@@ -3,6 +3,7 @@
 </h1>
 
 [![](https://img.shields.io/badge/NUKKIT-1.0-blue?style=flat-square)](https://ci.nukkitx.com/job/NukkitX/job/Nukkit/job/master/)
+![](https://img.shields.io/badge/JDK-≥1.8-blue?style=flat-square)
 [![](https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square)](./LICENSE)
 
 # 简介
@@ -67,6 +68,9 @@ Server:
 
 EventListener:
   IsEnable: true
+  ServerConsole: true
+  OtherEvents: true
+  ExecuteByWs: true
   EventList:
     - ServerCommand
     - PlayerChat
@@ -81,7 +85,10 @@ DebugMode: true
 - Server.HttpPort 是 API 服务器监听的端口，**请不要与 Nukkit(X) 本身的端口冲突**。
 - Server.WsPort 是 W1ebSocket 服务器监听的端口，**请不要与 Nukkit(X) 本身的端口冲突**。
 - EventListener.IsEnable 配置事件通知的 WebSocket 服务是否启用。
-- EventListener.EventList 如果 `EventListener.IsEnable` 为 true ，则这个列表下的事件会被 JSONAPI-Nukkit(X) 监听，并且通过 WebSocket 发送实时通知。
+- EventListener.ServerConsole 配置是否通过 WebSocket 发送服务器实时输出。
+- EventListener.OtherEvents 配置是否监听除了服务器实时输出外的其他 JSONAPI-Nukkit(X) 事件。
+- EventListener.ExecuteByWs 配置是否可以通过 WebSocket 执行命令。
+- EventListener.EventList 如果 `EventListener.OtherEvents` 为 true ，则这个列表下的事件会被 JSONAPI-Nukkit(X) 监听，并且通过 WebSocket 发送实时通知。
 - DebugMode 配置是否启动 Debug 模式，若为 true 则会在控制台输出调试信息并且调用 API 时无需鉴权信息。
 
 # 下载
@@ -92,6 +99,7 @@ DebugMode: true
 
 ### 已知问题
 - 在调用 `/api/Server/ExecuteCommand` 以运行一条命令时，控制台将会抛出一个异常，原因是不在主线程执行命令时会抛出错误，但是命令还是会正常执行。等待 Nukkit(X)官方修复此问题。
+- 如果开启了 "ExecuteByWs"，则每次通过 WebSocket 执行命令时，控制台都会抛出一个异常，原因同上。
 
 # 更新日志
 本项目遵从 [Angular Style Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)，更新日志由 `conventional-changelog` 自动生成。完整日志请点击 [CHANGELOG.md](./CHANGELOG.md)。
