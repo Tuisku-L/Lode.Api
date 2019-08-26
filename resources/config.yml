@@ -8,6 +8,9 @@ Server:
 
 EventListener:
   IsEnable: true
+  ServerConsole: true
+  OtherEvents: true
+  ExecuteByWs: true
   EventList:
     - ServerCommand
     - PlayerChat
