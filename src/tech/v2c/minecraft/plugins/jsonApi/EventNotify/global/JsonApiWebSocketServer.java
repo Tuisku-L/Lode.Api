@@ -1,5 +1,6 @@
 package tech.v2c.minecraft.plugins.jsonApi.EventNotify.global;
 
+import cn.nukkit.command.ConsoleCommandSender;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 
 public class JsonApiWebSocketServer extends WebSocketServer {
     public static HashMap<Object, WebSocket> connPool = new HashMap<Object, WebSocket>();
+    public static final boolean executeByWs = JsonApi.instance.getConfig().getSection("EventListener").getBoolean("ExecuteByWs");
 
     public JsonApiWebSocketServer(){
         super(new InetSocketAddress(JsonApi.instance.getConfig().getSection("Server").getString("IP"), JsonApi.instance.getConfig().getSection("Server").getInt("WsPort")));
@@ -36,6 +38,9 @@ public class JsonApiWebSocketServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
+        if(executeByWs){
+            JsonApi.instance.getServer().dispatchCommand(new ConsoleCommandSender(), message);
+        }
     }
 
     @Override
