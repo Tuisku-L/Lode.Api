@@ -1,0 +1,16 @@
+{
+  "name": "jsonapi-nukkit",
+  "version": "1.0.0",
+  "description": "A sdk for JsonApi-Nukkit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tuisku",
+  "license": "MIT",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

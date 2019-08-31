@@ -3,3 +3,5 @@
 /nukkitX/
 /.idea/
 /.czrc
+/SDK/Node.js/yarn.lock
+/SDK/Node.js/node_modules/
