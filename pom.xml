@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>Alpha-1.0</version>
     <name>JSONAPI</name>
-    <url>http://github.com/alecgorge/jsonapi</url>
+    <url>http://github.com/Tuisku-L/JSONAPI-NukkitX</url>
 
     <organization>
         <name>Tuisku Wood</name>
@@ -20,6 +20,23 @@
     </scm>
 
     <build>
+        <finalName>JSONAPI-${version}</finalName>
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>resources</directory>
+                <includes>
+                    <include>config.yml</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
