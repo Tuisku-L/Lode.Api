@@ -24,14 +24,9 @@
         <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
-                <directory>src</directory>
-                <includes>
-                    <include>plugin.yml</include>
-                </includes>
-            </resource>
-            <resource>
                 <directory>resources</directory>
                 <includes>
+                    <include>plugin.yml</include>
                     <include>config.yml</include>
                 </includes>
             </resource>
