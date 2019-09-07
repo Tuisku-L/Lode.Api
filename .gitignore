@@ -4,3 +4,6 @@
 /.idea/
 /.czrc
 /target/
+/.vscode/
+/.project
+.settings/
