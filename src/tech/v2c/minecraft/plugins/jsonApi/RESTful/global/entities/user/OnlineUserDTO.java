@@ -7,12 +7,39 @@ public class OnlineUserDTO {
     private UUID uid;
     private String name;
     private String displayName;
-    private int gamemode;
+    private int gameMode;
     private float height;
     private UserPositionDTO position;
     private int maxHealth;
     private float health;
     private int ping;
+    private boolean isOp;
+    private int experience;
+    private int experienceLevel;
+
+    public boolean isOp() {
+        return isOp;
+    }
+
+    public void setOp(boolean op) {
+        isOp = op;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public int getExperienceLevel() {
+        return experienceLevel;
+    }
+
+    public void setExperienceLevel(int experienceLevel) {
+        this.experienceLevel = experienceLevel;
+    }
 
     public long getId() {
         return id;
@@ -54,12 +81,12 @@ public class OnlineUserDTO {
         this.health = health;
     }
 
-    public int getGamemode() {
-        return gamemode;
+    public int getGameMode() {
+        return gameMode;
     }
 
-    public void setGamemode(int gamemode) {
-        this.gamemode = gamemode;
+    public void setGameMode(int gameMode) {
+        this.gameMode = gameMode;
     }
 
     public int getPing() {

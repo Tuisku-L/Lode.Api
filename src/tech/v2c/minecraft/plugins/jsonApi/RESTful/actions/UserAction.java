@@ -34,11 +34,14 @@ public class UserAction extends BaseAction {
         onlineUser.setDisplayName(user.getDisplayName());
         onlineUser.setId(user.getId());
         onlineUser.setUid(user.getUniqueId());
-        onlineUser.setGamemode(user.getGamemode());
+        onlineUser.setGameMode(user.getGamemode());
         onlineUser.setHeight(user.getHeight());
         onlineUser.setHealth(user.getHealth());
         onlineUser.setMaxHealth(user.getMaxHealth());
         onlineUser.setPing(user.getPing());
+        onlineUser.setOp(user.isOp());
+        onlineUser.setExperience(user.getExperience());
+        onlineUser.setExperienceLevel(user.getExperienceLevel());
 
         UserPositionDTO up = new UserPositionDTO();
         up.setX(user.getPosition().getX());
@@ -61,11 +64,14 @@ public class UserAction extends BaseAction {
             onlineUser.setDisplayName(user.getValue().getDisplayName());
             onlineUser.setId(user.getValue().getId());
             onlineUser.setUid(user.getKey());
-            onlineUser.setGamemode(user.getValue().getGamemode());
+            onlineUser.setGameMode(user.getValue().getGamemode());
             onlineUser.setHeight(user.getValue().getHeight());
             onlineUser.setHealth(user.getValue().getHealth());
             onlineUser.setMaxHealth(user.getValue().getMaxHealth());
             onlineUser.setPing(user.getValue().getPing());
+            onlineUser.setOp(user.getValue().isOp());
+            onlineUser.setExperience(user.getValue().getExperience());
+            onlineUser.setExperienceLevel(user.getValue().getExperienceLevel());
 
             UserPositionDTO up = new UserPositionDTO();
             up.setX(user.getValue().getPosition().getX());
