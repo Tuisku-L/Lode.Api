@@ -14,6 +14,15 @@ public class ServerDTO {
     private int difficulty;
     private int pluginCount;
     private boolean isAutoSave;
+    private boolean hasWhiteList;
+
+    public boolean isHasWhiteList() {
+        return hasWhiteList;
+    }
+
+    public void setHasWhiteList(boolean hasWhiteList) {
+        this.hasWhiteList = hasWhiteList;
+    }
 
     public int getPort() {
         return port;

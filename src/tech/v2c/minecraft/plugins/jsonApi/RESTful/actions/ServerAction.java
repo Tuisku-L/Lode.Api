@@ -34,6 +34,7 @@ public class ServerAction extends BaseAction {
         serverInfo.setDifficulty(server.getDifficulty());
         serverInfo.setPluginCount(server.getPluginManager().getPlugins().size());
         serverInfo.setAutoSave(server.getAutoSave());
+        serverInfo.setHasWhiteList(server.hasWhitelist());
 
         return new JsonResult(serverInfo);
     }
