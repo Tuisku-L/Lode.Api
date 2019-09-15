@@ -5,6 +5,7 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import tech.v2c.minecraft.plugins.jsonApi.EventNotify.global.JsonApiWebSocketServer;
 import tech.v2c.minecraft.plugins.jsonApi.tools.results.JsonResult;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -17,7 +18,7 @@ public class ServerConsoleEvent extends AbstractAppender {
     public void append(LogEvent logEvent) {
         HashMap<Object, Object> result = new HashMap<Object, Object>();
         result.put("type", "ServerConsoleEvent");
-        result.put("message", "[" + new Date().toString() + "] " + "[" + logEvent.getLevel().name() + "] " + logEvent.getMessage().getFormattedMessage());
+        result.put("message", "[" + new SimpleDateFormat("HH:mm:ss" ).format(new Date()) + "] " + "[" + logEvent.getLevel().name() + "] " + logEvent.getMessage().getFormattedMessage());
 
         JsonApiWebSocketServer.SendMsg(new JsonResult(result));
     }
