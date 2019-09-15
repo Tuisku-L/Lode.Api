@@ -37,7 +37,6 @@ public class JsonApiWebSocketServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        System.out.println(message);
         Gson gson = new Gson();
         WsMessage msg = gson.fromJson(message, WsMessage.class);
         if (msg.getAction().equalsIgnoreCase("auth")) {
@@ -56,6 +55,8 @@ public class JsonApiWebSocketServer extends WebSocketServer {
             } else {
                 conn.send(gson.toJson(new JsonResult(null, 401, "auth failed!")));
             }
+
+            return;
         }
 
         if (msg.getAction().equalsIgnoreCase("executeCmd")) {
@@ -67,6 +68,8 @@ public class JsonApiWebSocketServer extends WebSocketServer {
             } else {
                 conn.send(gson.toJson(new JsonResult(null, 401, "need login!")));
             }
+
+            return;
         }
 
         conn.send(gson.toJson(new JsonResult(null,403,"unknown command.")));
