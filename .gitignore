@@ -1,4 +1,6 @@
 /JsonApiForNukkitX.iml
+/JsonApiNukkit.iml
+.DS_Store
 /out/
 /nukkitX/
 /.idea/
