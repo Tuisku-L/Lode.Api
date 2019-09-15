@@ -98,6 +98,22 @@ public class UserAction extends BaseAction {
         return new JsonResult(be);
     }
 
+    @ApiRoute(Path = "/api/User/RemoveNameBan")
+    public JsonResult RemoveNameBan(JsonData data){
+        String userName = data.Data.get("target").toString();
+        server.getNameBans().remove(userName);
+
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/User/RemoveIpBan")
+    public JsonResult RemoveIpBan(JsonData data){
+        String ip = data.Data.get("target").toString();
+        server.getIPBans().remove(ip);
+
+        return new JsonResult();
+    }
+
     @ApiRoute(Path = "/api/User/BanByIp")
     public JsonResult BanUserByIp(JsonData data) {
         String userIp = data.Data.get("ip").toString();
