@@ -3,6 +3,7 @@ package tech.v2c.minecraft.plugins.jsonApi.RESTful.actions;
 import cn.nukkit.Server;
 
 import cn.nukkit.command.ConsoleCommandSender;
+import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.Config;
 import tech.v2c.minecraft.plugins.jsonApi.JsonApi;
 import tech.v2c.minecraft.plugins.jsonApi.RESTful.global.BaseAction;
@@ -15,12 +16,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerAction extends BaseAction {
-    @ApiRoute(Path="/api/Server/GetServerInfo")
-    public JsonResult GetServerInfo(){
+    @ApiRoute(Path = "/api/Server/GetServerInfo")
+    public JsonResult GetServerInfo() {
         Server server = JsonApi.instance.getServer();
 
         ServerDTO serverInfo = new ServerDTO();
-        serverInfo.setPort(server.getPort());;
+        serverInfo.setPort(server.getPort());
+        ;
         serverInfo.setVersion(server.getVersion());
         serverInfo.setOnlinePlayerCount(server.getOnlinePlayers().size());
         serverInfo.setIp(server.getIp());
@@ -39,17 +41,20 @@ public class ServerAction extends BaseAction {
         return new JsonResult(serverInfo);
     }
 
-    @ApiRoute(Path="/api/Server/ExecuteCommand")
-    public JsonResult ExecuteCommand(JsonData data){
+    @ApiRoute(Path = "/api/Server/ExecuteCommand")
+    public JsonResult ExecuteCommand(JsonData data) {
         String cmd = data.Data.get("command").toString();
-        // TO-DO: 当前不在主线程执行命令时会抛出错误, 但是还是会正常执行. 等待 NukkitX 修复此问题. 具体可见 cn.nukkit.Server.dispatchCommand 的注释. —— By Tuisku 2019-08-17
-        boolean executeResult = server.dispatchCommand(new ConsoleCommandSender(), cmd);
-
-        return new JsonResult(executeResult);
+        server.getScheduler().scheduleTask(JsonApi.instance, new Runnable() {
+            @Override
+            public void run() {
+                server.dispatchCommand(new ConsoleCommandSender(), cmd);
+            }
+        });
+        return new JsonResult();
     }
 
-    @ApiRoute(Path="/api/Server/ReloadServer")
-    public JsonResult ReloadServer(){
+    @ApiRoute(Path = "/api/Server/ReloadServer")
+    public JsonResult ReloadServer() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -61,31 +66,23 @@ public class ServerAction extends BaseAction {
         return new JsonResult(null, 200, "Server will have reload after 5 seconds.");
     }
 
-    @ApiRoute(Path="/api/Server/SetMaxPlayer")
-    public JsonResult SetMaxPlayer(JsonData data){
+    @ApiRoute(Path = "/api/Server/SetMaxPlayer")
+    public JsonResult SetMaxPlayer(JsonData data) {
         int maxPlayer = (int) Double.parseDouble(data.Data.get("maxPlayer").toString());
         server.setMaxPlayers(maxPlayer);
 
         return new JsonResult();
     }
 
-    @ApiRoute(Path="/api/Server/SetAutoSave")
-    public JsonResult SetAutoSave(JsonData data){
-        boolean isAutoSave = (boolean)data.Data.get("isAutoSave");
-        server.setAutoSave(isAutoSave);
-
-        return new JsonResult();
-    }
-
-    @ApiRoute(Path="/api/Server/SendBroadcastMessage")
-    public JsonResult SendBroadcastMessage(JsonData data){
+    @ApiRoute(Path = "/api/Server/SendBroadcastMessage")
+    public JsonResult SendBroadcastMessage(JsonData data) {
         String message = data.Data.get("message").toString();
 
         return new JsonResult(server.broadcastMessage(message));
     }
 
-    @ApiRoute(Path="/api/Server/SetServerProps")
-    public JsonResult SetServerProps(JsonData data){
+    @ApiRoute(Path = "/api/Server/SetServerProps")
+    public JsonResult SetServerProps(JsonData data) {
         String key = data.Data.get("key").toString();
         String value = data.Data.get("value").toString();
 
@@ -93,5 +90,14 @@ public class ServerAction extends BaseAction {
         conf.set(key, value);
 
         return new JsonResult(conf.save());
+    }
+
+    @ApiRoute(Path = "/api/Server/SetWhitelistState")
+    public JsonResult SetWhitelistState(JsonData data) {
+        boolean state = Boolean.parseBoolean(data.Data.get("state").toString());
+        Config conf = server.getProperties();
+        conf.set("white-list", state ? "on" : "off");
+
+        return new JsonResult();
     }
 }

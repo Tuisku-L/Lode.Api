@@ -62,8 +62,13 @@ public class JsonApiWebSocketServer extends WebSocketServer {
         if (msg.getAction().equalsIgnoreCase("executeCmd")) {
             if (connPool.containsKey(conn.getDraft())) {
                 if (executeByWs) {
-                    JsonApi.instance.getServer().dispatchCommand(new ConsoleCommandSender(), msg.getParams().get("command").toString());
-                    conn.send(gson.toJson(new JsonResult(null, 204, "execute success.")));
+                    JsonApi.instance.getServer().getScheduler().scheduleTask(JsonApi.instance, new Runnable() {
+                        @Override
+                        public void run() {
+                            JsonApi.instance.getServer().dispatchCommand(new ConsoleCommandSender(), msg.getParams().get("command").toString());
+                            conn.send(gson.toJson(new JsonResult(null, 204, "execute success.")));
+                        }
+                    });
                 }
             } else {
                 conn.send(gson.toJson(new JsonResult(null, 401, "need login!")));
