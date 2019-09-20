@@ -15,6 +15,15 @@ public class ServerDTO {
     private int pluginCount;
     private boolean isAutoSave;
     private boolean hasWhiteList;
+    private String serverType;
+
+    public String getServerType() {
+        return serverType;
+    }
+
+    public void setServerType(String serverType) {
+        this.serverType = serverType;
+    }
 
     public boolean isHasWhiteList() {
         return hasWhiteList;

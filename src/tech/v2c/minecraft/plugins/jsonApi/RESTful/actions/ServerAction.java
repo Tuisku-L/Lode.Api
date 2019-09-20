@@ -37,6 +37,7 @@ public class ServerAction extends BaseAction {
         serverInfo.setPluginCount(server.getPluginManager().getPlugins().size());
         serverInfo.setAutoSave(server.getAutoSave());
         serverInfo.setHasWhiteList(server.hasWhitelist());
+        serverInfo.setServerType(server.getClass().getName());
 
         return new JsonResult(serverInfo);
     }
@@ -98,6 +99,14 @@ public class ServerAction extends BaseAction {
         Config conf = server.getProperties();
         conf.set("white-list", state ? "on" : "off");
 
+        return new JsonResult();
+    }
+
+    @ApiRoute(Path = "/api/Server/SetGameMode")
+    public JsonResult SetGameMode(JsonData data) {
+        int gameMode = (int) Double.parseDouble(data.Data.get("gameMode").toString());
+        Config conf = server.getProperties();
+        conf.set("gamemode", gameMode);
         return new JsonResult();
     }
 }
