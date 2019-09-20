@@ -53,6 +53,37 @@ public class UserAction extends BaseAction {
         return new JsonResult(onlineUser);
     }
 
+    @ApiRoute(Path = "/api/User/GetUserByUuid")
+    public JsonResult GetUserByUuid(JsonData data) {
+        UUID uuid = UUID.fromString(data.Data.get("name").toString());
+
+        Player user = UserUtils.GetPlayerByUuid(uuid);
+        if (user == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        OnlineUserDTO onlineUser = new OnlineUserDTO();
+        onlineUser.setName(user.getName());
+        onlineUser.setDisplayName(user.getDisplayName());
+        onlineUser.setId(user.getId());
+        onlineUser.setUid(user.getUniqueId());
+        onlineUser.setGameMode(user.getGamemode());
+        onlineUser.setHeight(user.getHeight());
+        onlineUser.setHealth(user.getHealth());
+        onlineUser.setMaxHealth(user.getMaxHealth());
+        onlineUser.setPing(user.getPing());
+        onlineUser.setOp(user.isOp());
+        onlineUser.setExperience(user.getExperience());
+        onlineUser.setExperienceLevel(user.getExperienceLevel());
+
+        UserPositionDTO up = new UserPositionDTO();
+        up.setX(user.getPosition().getX());
+        up.setY(user.getPosition().getY());
+        up.setZ(user.getPosition().getZ());
+
+        onlineUser.setPosition(up);
+
+        return new JsonResult(onlineUser);
+    }
+
     @ApiRoute(Path = "/api/User/GetOnlineList")
     public JsonResult GetOnlineUserList() {
         Map<UUID, Player> users = server.getOnlinePlayers();
