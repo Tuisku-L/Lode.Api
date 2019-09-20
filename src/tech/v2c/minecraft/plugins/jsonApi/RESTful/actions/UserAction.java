@@ -453,4 +453,22 @@ public class UserAction extends BaseAction {
 
         return new JsonResult();
     }
+
+    @ApiRoute(Path = "/api/User/SetAllowFlight")
+    public JsonResult SetAllowFlight(JsonData data){
+        String userName = data.Data.get("name").toString();
+        boolean canFly = Boolean.parseBoolean(data.Data.get("state").toString());
+        Object msg = data.Data.get("message");
+
+        Player player = UserUtils.GetPlayerByName(userName);
+        if (player == null) return new JsonResult(null, 404, "Error: user not found.");
+
+        player.setAllowFlight(canFly);
+
+        if (msg != null) {
+            player.sendMessage(msg.toString());
+        }
+
+        return new JsonResult();
+    }
 }
