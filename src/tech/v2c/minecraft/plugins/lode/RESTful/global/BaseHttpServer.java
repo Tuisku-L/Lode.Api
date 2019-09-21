@@ -38,7 +38,7 @@ public class BaseHttpServer extends NanoHTTPD {
                 }
 
                 // 鉴权信息格式:
-                // token: {token}; ts: {timestamp}
+                // token={token}; ts={timestamp}
                 try {
                     long ts = Long.parseLong(clientAuthStr.split(";")[1].split("=")[1].trim());
                     if (!CheckTimestamp(ts)) {
@@ -120,7 +120,7 @@ public class BaseHttpServer extends NanoHTTPD {
 
     private String GetAuthentication(String url) {
         ConfigSection conf = Lode.instance.getConfig().getSection("Server").getSection("Authentication");
-        String base = conf.getString("UserName") + url + conf.getString("Password");
+        String base = conf.getString("UserName") + url.toLowerCase() + conf.getString("Password");
         return EncryptUtils.EncodeBySHA256(base);
     }
 
