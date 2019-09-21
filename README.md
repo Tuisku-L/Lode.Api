@@ -6,6 +6,9 @@
 ![](https://img.shields.io/badge/JDK-≥1.8-blue?style=flat-square)
 [![](https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square)](./LICENSE)
 
+# 写在前面
+因为存在两个代码互相冲突的版本，所以 `master 分支仅作为展示 README 之用，请不要使用 master 分支的代码进行开发和编译！`，请查看 [开发相关/插件版本](#插件版本) 查看对应版本的分支。
+
 # 简介
 Lode.Api 是一个用于 Nukkit/Bukkit(like)<sup>(1)</sup> 服务器的插件。提供了访问服务器各种数据和功能的 HTTP-API 接口。你可以通过这些接口来制作网站、App，以及提供让玩家在线购买物品并且在游戏中自动接收相关物品的能力<sup>(2)</sup>。
 
@@ -118,7 +121,7 @@ Bukkit(like) 版本：
 但是发布 release 版本时，将尽可能保证 Nukkit(X) 版本和 Bukkit(like) 版本一同发布，确保有相同的体验。
 
 ### 开发和发布流程
-Lode.Api 所有新功能的开发都会在新的 feature 分支进行开发，并且经过测试验证后合并到两个版本的 develop 分支中。最终在发布时，develop 分支的代码会合并到对应版本的 release 分支。因为存在两个代码互相冲突的版本，所以 `master 分支仅作为展示 README 之用，请不要使用 master 分支的代码进行开发和编译！`
+Lode.Api 所有新功能的开发都会在新的 feature 分支进行开发，并且经过测试验证后合并到两个版本的 develop 分支中。最终在发布时，develop 分支的代码会合并到对应版本的 release 分支。
 
 ### 已知问题
 暂无。欢迎体验并发现问题后提出 Issue。
