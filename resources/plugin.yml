@@ -1,5 +1,5 @@
-name: JSONAPI
-main: tech.v2c.minecraft.plugins.jsonApi.JsonApi
+name: Lode
+main: tech.v2c.minecraft.plugins.lode.Lode
 version: "1.0.0"
 api: ["1.0.0"]
 load: STARTUP

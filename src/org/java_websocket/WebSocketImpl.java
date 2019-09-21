@@ -36,7 +36,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.handshake.ServerHandshakeBuilder;
 import org.java_websocket.server.WebSocketServer.WebSocketWorker;
 import org.java_websocket.util.Charsetfunctions;
-import tech.v2c.minecraft.plugins.jsonApi.tools.results.JsonResult;
+import tech.v2c.minecraft.plugins.lode.tools.results.JsonResult;
 
 /**
  * Represents one end (client or server) of a single WebSocketImpl connection.

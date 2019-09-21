@@ -25,7 +25,7 @@ import org.java_websocket.framing.Framedata.Opcode;
 import org.java_websocket.handshake.HandshakeImpl1Client;
 import org.java_websocket.handshake.Handshakedata;
 import org.java_websocket.handshake.ServerHandshake;
-import tech.v2c.minecraft.plugins.jsonApi.tools.results.JsonResult;
+import tech.v2c.minecraft.plugins.lode.tools.results.JsonResult;
 
 /**
  * A subclass must implement at least <var>onOpen</var>, <var>onClose</var>, and <var>onMessage</var> to be
