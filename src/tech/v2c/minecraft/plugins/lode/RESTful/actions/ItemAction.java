@@ -17,7 +17,7 @@ public class ItemAction extends BaseAction {
         ArrayList<ItemDTO> list = new ArrayList<ItemDTO>();
         for (int i = 0; i < Item.list.length; i++) {
             Item item = Item.get(i);
-            if(item.getName().toLowerCase().contains("unknown")){
+            if (item.getName().toLowerCase().contains("unknown")) {
                 continue;
             }
             ItemDTO itemDTO = new ItemDTO();
@@ -31,7 +31,7 @@ public class ItemAction extends BaseAction {
     }
 
     @ApiRoute(Path = "/api/Item/GetItemInfo")
-    public JsonResult GetItemInfo(Map data){
+    public JsonResult GetItemInfo(Map data) {
         int itemId = (int) Double.parseDouble(data.get("item").toString());
 
         Item item = Item.get(itemId);
@@ -49,7 +49,6 @@ public class ItemAction extends BaseAction {
         String userName = data.get("name").toString();
         int itemId = (int) Double.parseDouble(data.get("item").toString());
         Object count = data.get("count");
-        Object meta = data.get("meta");
         Object msg = data.get("message");
 
         Player player = UserUtils.GetPlayerByName(userName);
@@ -59,17 +58,18 @@ public class ItemAction extends BaseAction {
             return new JsonResult(null, 409, "Error: Player's Inventory is full.");
         } else {
             int firstEmpty = player.getInventory().firstEmpty(null);
-            Item item = Item.get(itemId, meta == null ? 100 : (int) Double.parseDouble(meta.toString()), count == null ? 1 : (int) Double.parseDouble(count.toString()));
-            if(item.getName().toLowerCase().contains("unknown")){
+            Item item = Item.get(itemId);
+            item.setCount(count == null ? 1 : (int) (Double.parseDouble(count.toString())));
+            if (item.getName().toLowerCase().contains("unknown")) {
                 return new JsonResult(null, 404, "Error: item not found.");
             }
             boolean result = player.getInventory().setItem(firstEmpty, item);
-            if(player.getInventory().setItem(firstEmpty, item)){
-                if(msg != null){
+            if (player.getInventory().setItem(firstEmpty, item)) {
+                if (msg != null) {
                     player.sendMessage(msg.toString());
                 }
                 return new JsonResult(result);
-            }else{
+            } else {
                 return new JsonResult(null, 400, "Error: can not send item to player.");
             }
         }
