@@ -228,6 +228,11 @@ public class UserAction extends BaseAction {
         Player user = UserUtils.GetPlayerByName(userName);
         if (user == null) return new JsonResult(null, 404, "Error: user not found.");
 
+        Object msg = data.get("message");
+        if (msg != null) {
+            user.sendMessage(msg.toString());
+        }
+
         return new JsonResult(user.setGamemode(gameMode));
     }
 
@@ -235,12 +240,11 @@ public class UserAction extends BaseAction {
     public JsonResult SendChat(Map data) {
         String userName = data.get("name").toString();
         String message = data.get("message").toString();
-        Object source = data.get("source");
 
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
-        player.sendChat(source == null ? "" : source.toString(), message);
+        player.sendChat(userName, message);
 
         return new JsonResult();
     }
@@ -269,9 +273,9 @@ public class UserAction extends BaseAction {
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         if (expType == 0) {
-            player.sendExperience(value);
+            player.addExperience(value);
         } else {
-            player.sendExperienceLevel(value);
+            player.sendExperienceLevel(player.getExperienceLevel() + value);
         }
 
         if (msg != null) {
