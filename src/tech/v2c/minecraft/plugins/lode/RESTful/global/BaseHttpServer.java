@@ -2,6 +2,7 @@ package tech.v2c.minecraft.plugins.lode.RESTful.global;
 
 import cn.nukkit.utils.ConfigSection;
 import com.google.gson.Gson;
+import org.bukkit.configuration.ConfigurationSection;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
@@ -25,7 +26,7 @@ public class BaseHttpServer extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
         if (!Lode.instance.isDebugMode) {
-            if(!uri.toLowerCase().contains("/api/server/getstatus")){
+            if (!uri.toLowerCase().contains("/api/server/getstatus")) {
                 String clientAuthStr = session.getHeaders().get("x-lode-authentication");
                 // 没有鉴权头
                 if (clientAuthStr == null || clientAuthStr.equals("")) {
@@ -56,27 +57,28 @@ public class BaseHttpServer extends NanoHTTPD {
             }
         }
 
-        // 从 InputStream 获取 Body
-        String body;
-        try {
-            body = GetBody(session.getInputStream());
-        } catch (IOException e) {
-            return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体不正确. " + e.getMessage());
-        }
-
-        // Body => Map
         Map<String, Object> jsonData;
-        try {
-            jsonData = new Gson().fromJson(body, Map.class);
-        } catch (Exception e) {
-            return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体格式不正确. " + e.getMessage());
-        }
 
         // 如果是特定的文件上传请求, 把文件放进 Map
         if (uri.toLowerCase().contains("upload") || uri.toLowerCase().contains("install")) {
             jsonData = new HashMap<>();
             Map<String, File> allFile = UploadFiles(session);
-           jsonData.put("files", allFile);
+            jsonData.put("files", allFile);
+        } else {
+            // 从 InputStream 获取 Body
+            String body;
+            try {
+                body = GetBody(session.getInputStream());
+            } catch (IOException e) {
+                return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体不正确. " + e.getMessage());
+            }
+
+            // Body => Map
+            try {
+                jsonData = new Gson().fromJson(body, Map.class);
+            } catch (Exception e) {
+                return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体格式不正确. " + e.getMessage());
+            }
         }
 
         // 调用指定的 action

@@ -461,6 +461,10 @@ public class UserAction extends BaseAction {
 
         player.setHealth(healthValue);
 
+        Object msg = data.get("message");
+        if (msg != null) {
+            player.sendMessage(msg.toString());
+        }
         return new JsonResult();
     }
 
@@ -483,6 +487,11 @@ public class UserAction extends BaseAction {
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
         player.getFoodData().setLevel(hungerValue);
+
+        Object msg = data.get("message");
+        if (msg != null) {
+            player.sendMessage(msg.toString());
+        }
 
         return new JsonResult();
     }
