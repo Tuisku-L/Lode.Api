@@ -54,7 +54,7 @@ public class UserAction extends BaseAction {
 
     @ApiRoute(Path = "/api/User/GetUserByUuid")
     public JsonResult GetUserByUuid(Map data) {
-        UUID uuid = UUID.fromString(data.get("name").toString());
+        UUID uuid = UUID.fromString(data.get("uuid").toString());
 
         Player user = UserUtils.GetPlayerByUuid(uuid);
         if (user == null) return new JsonResult(null, 404, "Error: user not found.");
