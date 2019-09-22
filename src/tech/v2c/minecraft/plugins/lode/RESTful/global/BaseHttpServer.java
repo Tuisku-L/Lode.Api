@@ -2,7 +2,6 @@ package tech.v2c.minecraft.plugins.lode.RESTful.global;
 
 import cn.nukkit.utils.ConfigSection;
 import com.google.gson.Gson;
-import org.bukkit.configuration.ConfigurationSection;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
