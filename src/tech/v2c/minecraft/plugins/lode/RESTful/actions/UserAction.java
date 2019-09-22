@@ -294,7 +294,7 @@ public class UserAction extends BaseAction {
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
-        player.setOnFire(time);
+        player.setOnFire(time / 1000);
 
         if (msg != null) {
             player.sendMessage(msg.toString());
@@ -323,13 +323,12 @@ public class UserAction extends BaseAction {
     @ApiRoute(Path = "/api/User/KickPlayer")
     public JsonResult KickPlayer(Map data) {
         String userName = data.get("name").toString();
-        boolean isKickByAdmin = (boolean) data.get("isKickByAdmin");
         Object reason = data.get("reason");
 
         Player player = UserUtils.GetPlayerByName(userName);
         if (player == null) return new JsonResult(null, 404, "Error: user not found.");
 
-        player.kick(reason == null ? PlayerKickEvent.Reason.UNKNOWN.toString() : reason.toString(), isKickByAdmin);
+        player.kick(reason == null ? PlayerKickEvent.Reason.UNKNOWN.toString() : reason.toString(), false);
 
         return new JsonResult();
     }
