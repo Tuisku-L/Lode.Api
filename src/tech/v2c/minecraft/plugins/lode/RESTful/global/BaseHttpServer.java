@@ -4,6 +4,7 @@ import cn.nukkit.utils.ConfigSection;
 import com.google.gson.Gson;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
+import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
 import tech.v2c.minecraft.plugins.lode.Lode;
@@ -11,6 +12,7 @@ import tech.v2c.minecraft.plugins.lode.tools.EncryptUtils;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BaseHttpServer extends NanoHTTPD {
@@ -24,17 +26,19 @@ public class BaseHttpServer extends NanoHTTPD {
     @Override
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
-        if (!Lode.instance.isDebugMode) {
+        String origin = session.getHeaders().get("origin");
+
+        if (!Lode.instance.isDebugMode && session.getMethod() != Method.OPTIONS) {
             if (!uri.toLowerCase().contains("/api/server/getstatus")) {
                 String clientAuthStr = session.getHeaders().get("x-lode-authentication");
                 // 没有鉴权头
                 if (clientAuthStr == null || clientAuthStr.equals("")) {
-                    return Response.newFixedLengthResponse(Status.UNAUTHORIZED, MIME_PLAINTEXT, "Error:  401 Unauthorized. 需要鉴权信息.");
+                    return GetResponse(Response.newFixedLengthResponse(Status.UNAUTHORIZED, MIME_PLAINTEXT, "Error:  401 Unauthorized. 需要鉴权信息."), origin);
                 }
 
                 //鉴权头不完整
                 if (clientAuthStr.split(";").length != 2) {
-                    return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. 鉴权信息不完整.");
+                    return GetResponse(Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. 鉴权信息不完整."), origin);
                 }
 
                 // 鉴权信息格式:
@@ -42,16 +46,16 @@ public class BaseHttpServer extends NanoHTTPD {
                 try {
                     long ts = Long.parseLong(clientAuthStr.split(";")[1].split("=")[1].trim());
                     if (!CheckTimestamp(ts)) {
-                        return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Timeout.");
+                        return GetResponse(Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Timeout."), origin);
                     }
 
                     String serverAuthStr = GetAuthentication(uri);
                     String token = clientAuthStr.split(";")[0].split("=")[1].trim();
                     if (!serverAuthStr.equalsIgnoreCase(token)) {
-                        return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Authentication failed.");
+                        return GetResponse(Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. Authentication failed."), origin);
                     }
                 } catch (Exception e) {
-                    return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. 鉴权信息不正确. " + e.getMessage());
+                    return GetResponse(Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 403 Forbidden. 鉴权信息不正确. " + e.getMessage()), origin);
                 }
             }
         }
@@ -69,14 +73,14 @@ public class BaseHttpServer extends NanoHTTPD {
             try {
                 body = GetBody(session.getInputStream());
             } catch (IOException e) {
-                return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体不正确. " + e.getMessage());
+                return GetResponse(Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体不正确. " + e.getMessage()), origin);
             }
 
             // Body => Map
             try {
                 jsonData = new Gson().fromJson(body, Map.class);
             } catch (Exception e) {
-                return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体格式不正确. " + e.getMessage());
+                return GetResponse(Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体格式不正确. " + e.getMessage()), origin);
             }
         }
 
@@ -85,14 +89,14 @@ public class BaseHttpServer extends NanoHTTPD {
         try {
             result = RouteManage.TouchAction(uri.toLowerCase(), jsonData);
         } catch (Exception e) {
-            return Response.newFixedLengthResponse(Status.INTERNAL_ERROR, MIME_PLAINTEXT, "");
+            return GetResponse(Response.newFixedLengthResponse(Status.INTERNAL_ERROR, MIME_PLAINTEXT, ""), origin);
         }
 
         if (result == "404") {
-            return Response.newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Error: " + uri + " is not found.");
+            return GetResponse(Response.newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Error: " + uri + " is not found."), origin);
         }
 
-        return Response.newFixedLengthResponse(Status.OK, "application/json; charset=utf-8", result);
+        return GetResponse(Response.newFixedLengthResponse(Status.OK, "application/json; charset=utf-8", result), origin);
     }
 
     private Map<String, File> UploadFiles(IHTTPSession session) {
@@ -136,5 +140,24 @@ public class BaseHttpServer extends NanoHTTPD {
         result.write(buffer, 0, inputStream.read(buffer));
 
         return result.toString("UTF-8");
+    }
+
+    private Response GetResponse(Response response, String origin) {
+        if(!Lode.instance.isDebugMode){
+            response.addHeader("Access-Control-Allow-Headers", "x-lode-authentication");
+        }
+
+        if (origin != null && Lode.instance.getConfig().getSection("Server").getSection("AllowOrigin").getBoolean("IsEnable")) {
+            List domains = Lode.instance.getConfig().getSection("Server").getSection("AllowOrigin").getList("Domains");
+            response.addHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+            response.addHeader("Access-Control-Allow-Credentials", "true");
+            if (domains.contains("*")) {
+                response.addHeader("Access-Control-Allow-Origin", "*");
+            } else if (domains.contains(origin)) {
+                response.addHeader("Access-Control-Allow-Origin", origin);
+            }
+        }
+
+        return response;
     }
 }

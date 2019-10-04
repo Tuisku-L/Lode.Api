@@ -5,6 +5,10 @@ Server:
     UserName: root
   HttpPort: 19133
   WsPort: 19134
+  AllowOrigin:
+    IsEnable: true
+    Domains:
+      - "*"
 
 EventListener:
   IsEnable: true

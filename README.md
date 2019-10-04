@@ -68,6 +68,10 @@ Server:
     UserName: root
   HttpPort: 19133
   WsPort: 19134
+  AllowOrigin:
+    IsEnable: true
+    Domains:
+      - "*"
 
 EventListener:
   IsEnable: true
@@ -87,6 +91,9 @@ DebugMode: true
 - Server.IP 是配置 WebSocket 服务器监听的 IP 地址。
 - Server.HttpPort 是 API 服务器监听的端口，**请不要与游戏服务端本身的端口冲突**。
 - Server.WsPort 是 W1ebSocket 服务器监听的端口，**请不要与游戏服务端本身的端口冲突**。
+- Server.AllowOrigin 主要用于配置是否允许前端调用的跨域。
+- Server.AllowOrigin.IsEnable 是否允许跨域。
+- Server.AllowOrigin.Domains 如果 `Server.AllowOrigin.IsEnable` 为 true，则这个列表下的域名将会被允许跨域调用。
 - EventListener.IsEnable 配置事件通知的 WebSocket 服务是否启用。
 - EventListener.ServerConsole 配置是否通过 WebSocket 发送服务器实时输出。
 - EventListener.OtherEvents 配置是否监听除了服务器实时输出外的其他 Lode.Api 事件。
