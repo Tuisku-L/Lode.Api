@@ -10,6 +10,7 @@ import cn.nukkit.permission.BanEntry;
 import tech.v2c.minecraft.plugins.lode.RESTful.global.BaseAction;
 import tech.v2c.minecraft.plugins.lode.RESTful.global.annotations.ApiRoute;
 import tech.v2c.minecraft.plugins.lode.RESTful.global.entities.user.OnlineUserDTO;
+import tech.v2c.minecraft.plugins.lode.RESTful.global.entities.user.OnlineSimpleUserDTO;
 import tech.v2c.minecraft.plugins.lode.RESTful.global.entities.user.PlayerInventoryDTO;
 import tech.v2c.minecraft.plugins.lode.RESTful.global.entities.user.UserPositionDTO;
 import tech.v2c.minecraft.plugins.lode.tools.results.JsonResult;
@@ -102,6 +103,31 @@ public class UserAction extends BaseAction {
             onlineUser.setOp(user.getValue().isOp());
             onlineUser.setExperience(user.getValue().getExperience());
             onlineUser.setExperienceLevel(user.getValue().getExperienceLevel());
+
+            UserPositionDTO up = new UserPositionDTO();
+            up.setX(user.getValue().getPosition().getX());
+            up.setY(user.getValue().getPosition().getY());
+            up.setZ(user.getValue().getPosition().getZ());
+
+            onlineUser.setPosition(up);
+
+            userList.add(onlineUser);
+        }
+        return new JsonResult(userList);
+    }
+
+    @ApiRoute(Path = "/api/User/GetOnlineList2")
+    public JsonResult GetOnlineUserList2() {
+        Map<UUID, Player> users = server.getOnlinePlayers();
+        ArrayList<OnlineSimpleUserDTO> userList = new ArrayList<OnlineSimpleUserDTO>();
+
+        for (Map.Entry<UUID, Player> user : users.entrySet()) {
+            OnlineSimpleUserDTO onlineUser = new OnlineSimpleUserDTO();
+            onlineUser.setName(user.getValue().getName());
+            onlineUser.setDisplayName(user.getValue().getDisplayName());
+            onlineUser.setId(user.getValue().getId());
+            onlineUser.setHealth(user.getValue().getHealth());
+            onlineUser.setMaxHealth(user.getValue().getMaxHealth());
 
             UserPositionDTO up = new UserPositionDTO();
             up.setX(user.getValue().getPosition().getX());

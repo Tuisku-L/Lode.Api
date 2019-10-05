@@ -25,7 +25,7 @@ public class BaseHttpServer extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
         if (!Lode.instance.isDebugMode) {
-            if (!uri.toLowerCase().contains("/api/server/getstatus")) {
+            if (!uri.toLowerCase().contains("/api/server/getstatus") && !uri.toLowerCase().contains("/api/user/getonlinelist2")) {
                 String clientAuthStr = session.getHeaders().get("x-lode-authentication");
                 // 没有鉴权头
                 if (clientAuthStr == null || clientAuthStr.equals("")) {
