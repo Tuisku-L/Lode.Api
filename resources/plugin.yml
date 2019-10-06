@@ -1,0 +1,8 @@
+name: Lode
+main: tech.v2c.minecraft.plugins.lode.Lode
+version: "1.0.0"
+api: ["1.0.0"]
+load: STARTUP
+author: Tuisku
+description: JSON Api for NukkitX
+website: https://minecraft.v2c.tech/plugins

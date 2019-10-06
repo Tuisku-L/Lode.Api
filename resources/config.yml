@@ -1,0 +1,18 @@
+Server:
+  IP: 0.0.0.0
+  Authentication:
+    Password: password
+    UserName: root
+  HttpPort: 19133
+  WsPort: 19134
+
+EventListener:
+  IsEnable: true
+  ServerConsole: true
+  OtherEvents: true
+  ExecuteByWs: true
+  EventList:
+    - ServerCommand
+    - PlayerChat
+
+DebugMode: true

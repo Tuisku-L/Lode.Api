@@ -1,5 +1,5 @@
 <h1 align="center">
-    Lode.Api
+    Lode.Api（Nukkit 版本）
 </h1>
 
 [![](https://img.shields.io/badge/NUKKIT-1.0-blue?style=flat-square)](https://ci.nukkitx.com/job/NukkitX/job/Nukkit/job/master/)
@@ -7,10 +7,10 @@
 [![](https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square)](./LICENSE)
 
 # 写在前面
-因为存在两个代码互相冲突的版本，所以 `master 分支仅作为展示 README 之用，请不要使用 master 分支的代码进行开发和编译！`，请查看 [开发相关/插件版本](#插件版本) 查看对应版本的分支。
+此版本为 Lode.Api 的 Nukkit 版本，如果需要查看 Bukkit 分支，请 [点击这里](https://github.com/Tuisku-L/Lode.Api.Bukkit)。
 
 # 简介
-Lode.Api 是一个用于 Nukkit/Bukkit(like)<sup>(1)</sup> 服务器的插件。提供了访问服务器各种数据和功能的 HTTP-API 接口。你可以通过这些接口来制作网站、App，以及提供让玩家在线购买物品并且在游戏中自动接收相关物品的能力<sup>(2)</sup>。
+Lode.Api 是一个用于 Nukkit/Bukkit(like)<sup>(1)</sup> 服务器的插件。提供了访问服务器各种数据和功能的 Http 和 WebSocket 接口。你可以通过这些接口来制作网站、App，以及提供让玩家在线购买物品并且在游戏中自动接收相关物品的能力<sup>(2)</sup>。
 
 **<sup>(1)</sup>**：Bukkit Like - 基于 Bukkit 或 Bukkit 相兼容的服务端，譬如 Spigot、Paper 等。
 
@@ -20,12 +20,12 @@ Lode.Api 是一个用于 Nukkit/Bukkit(like)<sup>(1)</sup> 服务器的插件。
 Lode.Api 还处于早期的**开发中**状态。Lode.Api 的目录结构、API 地址、配置文件格式等均有可能在未来发生变化。**不建议将当前版本的插件用于重要的线上服务器中**。
 
 # 插件说明
-Lode.Api 提供了使用 HTTP-API 调用 Nukkit/Bukkit(like) 底层功能的能力，可以实现大部分包括服务器管理、插件管理、用户管理等方面的功能。您可以在 Nukkit/Bukkit(like) 服务器安装有 Lode.Api 的前提下，使用 HTTP-API 开发相关网站、App、商城系统等。也可以以 Lode.Api 提供的 API 为基础，开发类似“云插件”（开发中）的功能（不限编程语言，无需安装至服务器）。
+Lode.Api 提供了使用 Http 调用 Nukkit/Bukkit(like) 底层功能的能力，可以实现大部分包括服务器管理、插件管理、用户管理等方面的功能。您可以在 Nukkit/Bukkit(like) 服务器安装有 Lode.Api 的前提下，使用 Http 和 WebSocket 接口开发相关网站、App、商城系统等。也可以以 Lode.Api 提供的 API 为基础，开发类似“云插件”（开发中）的功能（不限编程语言，无需安装至服务器）。
 
 ## API 相关信息
 
 ### API 文档
-请至 Lode.Api 的 [Wiki](https://github.com/Tuisku-L/JSONAPI-NukkitX/wiki) 页面查阅相关说明和 API 文档。
+请至 Lode.Api 的 [Wiki](https://github.com/Tuisku-L/Lode.Api/wiki) 页面查阅相关说明和 API 文档。
 
 ### 调用方式
 
@@ -96,32 +96,24 @@ DebugMode: true
 
 # 下载
 
-你可以查阅 [release 页面](https://github.com/Tuisku-L/Lode.Api/releases) 并下载 Nukkit(X) 或 Bukkit 对应版本最新的构建。
+你可以查阅 [release 页面](https://github.com/Tuisku-L/Lode.Api/releases) 并下载最新的构建。
 
 # 开发相关
 
 ### 插件版本
 Lode.Api 分别提供 Nukkit(X) 和 Bukkit(like) 两个版本，根据各自服务端的代码实现略有不同，但是尽量保持了两个版本间一致的 API 调用和返回值类型。你可以分别查看两个版本的代码：
 
-Nukkit(X) 版本：
+- [Nukkit(X) 版本](https://github.com/Tuisku-L/Lode.Api)
 
-[发布（release）分支](https://github.com/Tuisku-L/Lode.Api/tree/release/nukkitVersion)
-&nbsp;|&nbsp;
-[开发（develop）分支](https://github.com/Tuisku-L/Lode.Api/tree/develop/nukkitVersion)
-
-Bukkit(like) 版本：
-
-[发布（release）分支](https://github.com/Tuisku-L/Lode.Api/tree/release/bukkitVersion)
-&nbsp;|&nbsp;
-[开发（develop）分支](https://github.com/Tuisku-L/Lode.Api/tree/develop/bukkitVersion)
+- [Bukkit(like) 版本](https://github.com/Tuisku-L/Lode.Api.Bukkit)
 
 ### 版本优先级
-因开发者精力有限，Lode.Api 在代码层面以 Nukkit(X) 版本优先开发（即 develop/nukkitVersion 分支的代码会先更新，随后将更新 develop/bukkitVersion 的代码）。
+因开发者精力有限，Lode.Api 在代码层面以 Nukkit(X) 版本优先开发，随后将更新 Bukkit(like) 版本的代码。
 
 但是发布 release 版本时，将尽可能保证 Nukkit(X) 版本和 Bukkit(like) 版本一同发布，确保有相同的体验。
 
 ### 开发和发布流程
-Lode.Api 所有新功能的开发都会在新的 feature 分支进行开发，并且经过测试验证后合并到两个版本的 develop 分支中。最终在发布时，develop 分支的代码会合并到对应版本的 release 分支。
+Lode.Api 所有新功能的开发都会在新的 feature 分支进行开发，并且经过测试验证后合并到 develop 分支中。最终在发布时，develop 分支的代码会合并到对应版本的 master 分支。
 
 ### 已知问题
 暂无。欢迎体验并发现问题后提出 Issue。
