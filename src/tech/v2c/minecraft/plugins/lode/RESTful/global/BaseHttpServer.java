@@ -65,9 +65,12 @@ public class BaseHttpServer extends NanoHTTPD {
             jsonData.put("files", allFile);
         } else {
             // 从 InputStream 获取 Body
-            String body;
+            String body = "";
+            Integer length = Integer.parseInt(session.getHeaders().get("content-length"));
             try {
-                body = GetBody(session.getInputStream());
+                if(length > 0){
+                    body = GetBody(session.getInputStream());
+                }
             } catch (IOException e) {
                 return Response.newFixedLengthResponse(Status.FORBIDDEN, MIME_PLAINTEXT, "Error: 500 INTERNAL ERROR. 请求体不正确. " + e.getMessage());
             }
@@ -131,7 +134,11 @@ public class BaseHttpServer extends NanoHTTPD {
 
     private String GetBody(InputStream inputStream) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
-        int count = inputStream.available();
+        int count = 0;
+        while (count == 0){
+            count = inputStream.available();
+        }
+        System.out.println("count:"+count);
         byte[] buffer = new byte[count];
         result.write(buffer, 0, inputStream.read(buffer));
 
