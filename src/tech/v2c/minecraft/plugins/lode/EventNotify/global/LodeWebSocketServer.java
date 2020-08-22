@@ -8,6 +8,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import tech.v2c.minecraft.plugins.lode.Lode;
 import tech.v2c.minecraft.plugins.lode.tools.FifoList;
+import tech.v2c.minecraft.plugins.lode.tools.LogUtils;
 import tech.v2c.minecraft.plugins.lode.tools.results.JsonResult;
 
 import java.net.InetSocketAddress;
@@ -77,8 +78,10 @@ public class LodeWebSocketServer extends WebSocketServer {
                     Lode.instance.getServer().getScheduler().scheduleTask(Lode.instance, new Runnable() {
                         @Override
                         public void run() {
-                            Lode.instance.getServer().dispatchCommand(new ConsoleCommandSender(), msg.getParams().get("command").toString());
+                            String cmd = msg.getParams().get("command").toString();
+                            Lode.instance.getServer().dispatchCommand(new ConsoleCommandSender(), cmd);
                             conn.send(gson.toJson(new JsonResult(null, 204, "execute success.")));
+                            LogUtils.Info("Execute command by websocket: " + cmd);
                         }
                     });
                 }
