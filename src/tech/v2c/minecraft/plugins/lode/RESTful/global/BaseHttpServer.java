@@ -138,7 +138,6 @@ public class BaseHttpServer extends NanoHTTPD {
         while (count == 0){
             count = inputStream.available();
         }
-        System.out.println("count:"+count);
         byte[] buffer = new byte[count];
         result.write(buffer, 0, inputStream.read(buffer));
 
