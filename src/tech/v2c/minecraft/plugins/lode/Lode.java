@@ -13,9 +13,11 @@ import tech.v2c.minecraft.plugins.lode.EventNotify.global.LodeWebSocketServer;
 import tech.v2c.minecraft.plugins.lode.RESTful.actions.*;
 import tech.v2c.minecraft.plugins.lode.RESTful.global.BaseHttpServer;
 import tech.v2c.minecraft.plugins.lode.RESTful.global.RouteManage;
+import tech.v2c.minecraft.plugins.lode.tools.FifoList;
 import tech.v2c.minecraft.plugins.lode.tools.LogUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Lode extends PluginBase {
     public static Lode instance;
@@ -26,6 +28,10 @@ public class Lode extends PluginBase {
 
     public static boolean isDebugMode;
 
+    public static int logMaxSize;
+
+    public static FifoList logList;
+
     public Lode() {
         Lode.instance = this;
     }
@@ -33,8 +39,8 @@ public class Lode extends PluginBase {
     @Override
     public void onEnable() {
         InitPlugin();
-
         InitActions();
+
         RouteManage.RegisterRoute();
         LogUtils.Info("Finish register actions.");
         (new Thread(() -> ServerRunner.run(BaseHttpServer.class))).start();
@@ -96,6 +102,9 @@ public class Lode extends PluginBase {
 
         this.isEnableWs = getConfig().getSection("EventListener").getBoolean("IsEnable");
         this.isDebugMode = getConfig().getBoolean("DebugMode");
+        this.logMaxSize = getConfig().getInt("LogMaxSize");
+
+        this.logList = new FifoList(logMaxSize);
     }
 
     private void InitConsoleEvent(){

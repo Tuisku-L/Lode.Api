@@ -16,3 +16,4 @@ EventListener:
     - PlayerChat
 
 DebugMode: true
+LogMaxSize: 100

@@ -3,6 +3,7 @@ package tech.v2c.minecraft.plugins.lode.EventNotify.Console;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import tech.v2c.minecraft.plugins.lode.EventNotify.global.LodeWebSocketServer;
+import tech.v2c.minecraft.plugins.lode.Lode;
 import tech.v2c.minecraft.plugins.lode.tools.results.JsonResult;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ public class ServerConsoleEvent extends AbstractAppender {
         result.put("type", "ServerConsoleEvent");
         result.put("message", "[" + new SimpleDateFormat("HH:mm:ss" ).format(new Date()) + "] " + "[" + logEvent.getLevel().name() + "] " + logEvent.getMessage().getFormattedMessage());
 
+        Lode.logList.push(result);
         LodeWebSocketServer.SendMsg(new JsonResult(result));
     }
 }

@@ -7,6 +7,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import tech.v2c.minecraft.plugins.lode.Lode;
+import tech.v2c.minecraft.plugins.lode.tools.FifoList;
 import tech.v2c.minecraft.plugins.lode.tools.results.JsonResult;
 
 import java.net.InetSocketAddress;
@@ -28,11 +29,17 @@ public class LodeWebSocketServer extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
+        Gson gson = new Gson();
+
         if(Lode.instance.isDebugMode){
             connPool.put(conn.getDraft(), conn);
-            Gson gson = new Gson();
             conn.send(gson.toJson(new JsonResult(null, 204, "Debug mode.")));
         }
+
+        FifoList logList = Lode.logList;
+        logList.forEach((x)->{
+            SendMsg(new JsonResult(x));
+        });
     }
 
     @Override
