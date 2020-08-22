@@ -79,6 +79,7 @@ EventListener:
     - PlayerChat
 
 DebugMode: true
+LogMaxSize: 100
 ```
 
 ## 配置文件说明
@@ -93,6 +94,7 @@ DebugMode: true
 - EventListener.ExecuteByWs 配置是否可以通过 WebSocket 执行命令。
 - EventListener.EventList 如果 `EventListener.OtherEvents` 为 true ，则这个列表下的事件会被 Lode.Api 监听，并且通过 WebSocket 发送实时通知。
 - DebugMode 配置是否启动 Debug 模式，若为 true 则会在控制台输出调试信息并且调用 API 时无需鉴权信息。
+- LogMaxSize 保存控制台输出发送到 WebSocket 的最高上限条数
 
 # 下载
 
@@ -111,12 +113,6 @@ Lode.Api 分别提供 Nukkit(X) 和 Bukkit(like) 两个版本，根据各自服�
 因开发者精力有限，Lode.Api 在代码层面以 Nukkit(X) 版本优先开发，随后将更新 Bukkit(like) 版本的代码。
 
 但是发布 release 版本时，将尽可能保证 Nukkit(X) 版本和 Bukkit(like) 版本一同发布，确保有相同的体验。
-
-### 开发和发布流程
-Lode.Api 所有新功能的开发都会在新的 feature 分支进行开发，并且经过测试验证后合并到 develop 分支中。最终在发布时，develop 分支的代码会合并到对应版本的 master 分支。
-
-### 已知问题
-暂无。欢迎体验并发现问题后提出 Issue。
 
 # 更新日志
 本项目遵从 [Angular Style Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)，更新日志由 `conventional-changelog` 自动生成。完整日志请点击 [CHANGELOG.md](./CHANGELOG.md)。
